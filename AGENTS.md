@@ -94,6 +94,6 @@ teaching scripts in `src/`.
 5. `src/05_data_exploration_rows.py`: Filtering, masks, scales, cross-tabs.
 6. `src/06_data_management_and_scales.py`: Recoding, binning, scale index.
 7. `src/07_intro_to_modeling.py`: What is a model? Mean as baseline, OLS.
-8. `src/08_linear_regression.py`: Multiple regression, controls, Typst table.
-9. `src/09_lab_modeling.py`: Hands-on modeling lab script for term projects.
+8. `src/08_multiple_regression.py`: Multiple regression, controls, Typst table.
+9. `src/09_categorical_models.py`: Binary, ordered, and multinomial logit.
 10. `src/10_visualization_insights.py`: Altair declarative graphics and comms.
