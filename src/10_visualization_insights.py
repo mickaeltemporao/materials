@@ -8,7 +8,7 @@ Learning Objectives:
   - Construct reusable functions to generate dot-and-whisker coefficient plots
   - Visualize segmented distributions using grouped kernel density estimation
   - Master declarative graphics in Python using Altair's grammar of graphics
-  - Map variables to visual channels using Altair data types (:Q, :N, :O, :T)
+  - Map variables to visual channels using Altair long-form data types
   - Build interactive charts with linked selections, tooltips, and brushing
   - Prepare publication-ready graphics for Typst papers and presentations
 ==============================================================================
@@ -193,11 +193,14 @@ plt.show()
 # Instead of writing imperative drawing instructions (draw line, set color),
 # you declare the relationship between data columns and visual channels.
 #
-# Core data types in Altair:
-#   :Q -> Quantitative (continuous numerical measurements, e.g. age, score)
-#   :N -> Nominal (unordered discrete categories, e.g. party, state)
-#   :O -> Ordinal (ranked discrete categories, e.g. education, Likert scale)
-#   :T -> Temporal (dates and timestamps)
+# Core data types in Altair (strictly specified using long-form syntax):
+#   - type="quantitative": Continuous numerical values (e.g. age, score)
+#   - type="nominal": Unordered discrete categories (e.g. party, state)
+#   - type="ordinal": Ordered discrete categories (e.g. education, Likert)
+#   - type="temporal": Dates and timestamps
+#
+# CRITICAL: Always use explicit method-based syntax and long-form type
+# arguments. Never use colon shorthand notation (e.g. :Q, :N, :O).
 
 # Sample 500 respondents for smooth interactive rendering:
 sample_df = df.sample(500, random_state=42)
@@ -207,10 +210,19 @@ scatter_chart = (
     alt.Chart(sample_df, title="Age vs. Polarization by Party")
     .mark_circle(size=60, opacity=0.7)
     .encode(
-        x=alt.X("age:Q", title="Respondent Age (years)"),
-        y=alt.Y("affective_polarization:Q", title="Affective Polarization"),
+        x=alt.X(
+            "age",
+            type="quantitative",
+            title="Respondent Age (years)",
+        ),
+        y=alt.Y(
+            "affective_polarization",
+            type="quantitative",
+            title="Affective Polarization",
+        ),
         color=alt.Color(
-            "party:N",
+            "party",
+            type="nominal",
             scale=alt.Scale(
                 domain=["Democrat", "Republican", "Independent"],
                 range=["#2b5c8f", "#d95f02", "#7570b3"],
@@ -218,10 +230,18 @@ scatter_chart = (
             title="Party Identification",
         ),
         tooltip=[
-            alt.Tooltip("age:Q", title="Age"),
-            alt.Tooltip("affective_polarization:Q", title="Polarization"),
-            alt.Tooltip("party:N", title="Party"),
-            alt.Tooltip("interest_label:N", title="Interest"),
+            alt.Tooltip("age", type="quantitative", title="Age"),
+            alt.Tooltip(
+                "affective_polarization",
+                type="quantitative",
+                title="Polarization",
+            ),
+            alt.Tooltip("party", type="nominal", title="Party"),
+            alt.Tooltip(
+                "interest_label",
+                type="nominal",
+                title="Interest",
+            ),
         ],
     )
     .properties(width=500, height=350)
@@ -246,11 +266,15 @@ interactive_scatter = (
     alt.Chart(sample_df)
     .mark_circle(size=50)
     .encode(
-        x=alt.X("age:Q", title="Age"),
-        y=alt.Y("affective_polarization:Q", title="Affective Polarization"),
+        x=alt.X("age", type="quantitative", title="Age"),
+        y=alt.Y(
+            "affective_polarization",
+            type="quantitative",
+            title="Affective Polarization",
+        ),
         color=alt.condition(
             brush,
-            alt.Color("party:N", legend=None),
+            alt.Color("party", type="nominal", legend=None),
             alt.value("lightgray"),
         ),
     )
@@ -263,9 +287,13 @@ brushed_bars = (
     alt.Chart(sample_df)
     .mark_bar()
     .encode(
-        y=alt.Y("interest_label:N", title="Political Interest"),
-        x=alt.X("count():Q", title="Number of Respondents"),
-        color="party:N",
+        y=alt.Y("interest_label", type="nominal", title="Political Interest"),
+        x=alt.X(
+            "count()",
+            type="quantitative",
+            title="Number of Respondents",
+        ),
+        color=alt.Color("party", type="nominal"),
     )
     .transform_filter(brush)
     .properties(width=250, height=300)
@@ -277,17 +305,21 @@ dashboard
 
 
 # ------------------------------------------------------------------------------
-# Intentional Error Challenge: The Type Encoding Suffix
+# Intentional Error Challenge: Incompatible Altair Data Type
 # ------------------------------------------------------------------------------
-# In Altair, specifying the wrong data type alters how the chart is rendered.
-# For example, encoding 'party' as Quantitative (:Q) will raise a Schema error
+# In Altair, specifying an incompatible data type raises a SchemaValidationError
 # because text strings cannot be mapped to a continuous numerical scale.
 #
 # 1. Uncomment the chart below and evaluate it in the REPL.
 # 2. Inspect the error message: what schema validation failed?
-# 3. Fix the type suffix to ':N' and re-run.
+# 3. Fix the data type to type="nominal" and re-run.
 # broken_chart = (
-#     alt.Chart(sample_df).mark_bar().encode(x="party:Q", y="count()")
+#     alt.Chart(sample_df)
+#     .mark_bar()
+#     .encode(
+#         x=alt.X("party", type="quantitative"),
+#         y=alt.Y("count()", type="quantitative"),
+#     )
 # )
 
 
@@ -307,10 +339,10 @@ dashboard
 # ------------------------------------------------------------------------------
 # Tasks:
 #   1. Using sample_df, build an Altair box plot or strip plot comparing
-#      'feeling_democrat' across levels of 'ideology:O'.
+#      'feeling_democrat' (type="quantitative") across levels of
+#      'ideology' (type="ordinal").
 #   2. Add an interactive dropdown binding allowing the user to filter
-#      the chart by 'party:N'.
+#      the chart by 'party' (type="nominal").
 #   3. What pattern do you observe in how partisans evaluate Democrats as
 #      their ideological self-placement becomes more conservative?
-
 
