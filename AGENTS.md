@@ -97,3 +97,35 @@ teaching scripts in `src/`.
 8. `src/08_multiple_regression.py`: Multiple regression, controls, Typst table.
 9. `src/09_categorical_models.py`: Binary, ordered, and multinomial logit.
 10. `src/10_visualization_insights.py`: Altair declarative graphics and comms.
+
+---
+
+## 6. Altair Declarative Visualization Standards
+- **First Visualizations in Curriculum:** Introduce Altair from the very first
+  plot in `src/04_data_exploration_columns.py` (univariate distributions:
+  histograms and bar charts), continuing through bivariate relationships in
+  `src/05`, scales in `src/06`, regression diagnostics in `src/07`, and
+  advanced declarative communication in `src/10`.
+- **Mandatory Method-Based Syntax:** Build all charts using explicit method
+  chaining:
+  ```python
+  chart = (
+      alt.Chart(df)
+      .mark_bar()
+      .encode(
+          x=alt.X("party", type="nominal", title="Party"),
+          y=alt.Y("votes", type="quantitative", title="Number of Votes"),
+      )
+      .properties(title="Election Votes by Party", width=500, height=350)
+  )
+  ```
+- **Strict Long-Form Data Types (ZERO Shorthands):**
+  - Always specify data types explicitly via long-form parameter `type=`:
+    `type="quantitative"`, `type="nominal"`, `type="ordinal"`,
+    `type="temporal"`.
+  - **NEVER** use encoding shorthands with colon notation (e.g., strictly
+    forbidden: `"party:N"`, `"age:Q"`, `alt.X("turnout:Q")`,
+    `alt.Color("party:N")`).
+  - Always use explicit channel helper classes when customizing titles,
+    scales, or bins:
+    `alt.X("turnout", type="quantitative", title="Voter Turnout (%)")`.
