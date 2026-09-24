@@ -7,7 +7,7 @@ Learning Objectives:
   - Understand why OLS is unsuitable for qualitative dependent variables
   - Estimate binary logistic regression models using statsmodels.formula.api
   - Transform log-odds coefficients into intuitive Odds Ratios (OR = exp(beta))
-  - Calculate and plot predicted probabilities (the S-curve) across predictors
+  - Calculate and plot predicted probabilities (the S-curve) in Altair
   - Estimate Ordered Logistic Regression using statsmodels OrderedModel
   - Interpret threshold cutpoints and the proportional odds assumption
   - Estimate Multinomial Logit models using smf.mnlogit for multi-party vote
@@ -35,7 +35,7 @@ Learning Objectives:
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import altair as alt
 import statsmodels.formula.api as smf
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 
@@ -135,24 +135,48 @@ pred_grid = pd.DataFrame({
 # Generate predicted probabilities:
 pred_grid["prob_biden"] = logit_model.predict(pred_grid)
 
-# Plot the characteristic S-curve:
-plt.figure(figsize=(8, 5))
-plt.plot(
-    pred_grid["ideology"], pred_grid["prob_biden"],
-    color="dodgerblue", linewidth=2.5, label="P(Vote Biden)"
+# Visualize the characteristic S-curve using Altair:
+scurve_line = (
+    alt.Chart(pred_grid)
+    .mark_line(color="#2b5c8f", strokeWidth=3)
+    .encode(
+        x=alt.X(
+            "ideology",
+            type="quantitative",
+            title="Ideological Self-Placement (1=Extr Lib to 7=Extr Con)",
+        ),
+        y=alt.Y(
+            "prob_biden",
+            type="quantitative",
+            title="Predicted Probability of Voting for Biden",
+            scale=alt.Scale(domain=[0, 1]),
+            axis=alt.Axis(format="%"),
+        ),
+    )
 )
-plt.axhline(0.5, color="gray", linestyle="--", alpha=0.7)
-plt.title(
-    "Predicted Probability of Voting for Biden (2020 ANES)",
-    fontsize=12, fontweight="bold"
+
+threshold_rule = (
+    alt.Chart()
+    .mark_rule(color="gray", strokeDash=[4, 4], strokeWidth=1.5)
+    .encode(y=alt.datum(0.5))
 )
-plt.xlabel("Ideological Self-Placement (1=Extr Lib, 4=Mod, 7=Extr Con)")
-plt.ylabel("Predicted Probability")
-plt.ylim(0, 1)
-plt.grid(True, linestyle=":", alpha=0.5)
-plt.legend()
-plt.tight_layout()
-plt.show()
+
+scurve_chart = (
+    (scurve_line + threshold_rule)
+    .properties(
+        title=alt.TitleParams(
+            text="Predicted Probability of Voting for Biden (2020 ANES)",
+            subtitle=[
+                "Logistic regression S-curve (median female respondent)",
+                "Dashed line = 50% threshold",
+            ],
+            anchor="start",
+        ),
+        width=500,
+        height=300,
+    )
+)
+scurve_chart
 
 
 # ------------------------------------------------------------------------------
@@ -257,5 +281,4 @@ mn_model.summary()
 #   2. Use mn_model.predict(profiles_df) to compute predicted probabilities.
 #   3. Label columns as ["P(Biden)", "P(Trump)", "P(Other)"].
 #   4. Which candidate is the predicted winner for each voter profile?
-
 
