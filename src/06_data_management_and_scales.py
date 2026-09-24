@@ -30,7 +30,7 @@ Learning Objectives:
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import altair as alt
 
 # Load the American National Election Studies (ANES 2020) dataset:
 data_url = "https://raw.githubusercontent.com/datamisc/ts-2020/main/data.csv"
@@ -179,16 +179,30 @@ df["age_cohort"] = pd.cut(df["age_clean"], bins=age_bins, labels=age_cohorts)
 # In the REPL, inspect the distribution of age cohorts:
 df["age_cohort"].value_counts().sort_index()
 
-# Plot cohort distribution:
-df["age_cohort"].value_counts().sort_index().plot(
-    kind="bar", color="darkcyan", figsize=(7, 5)
+# Visualize age cohort distribution using Altair:
+cohort_chart = (
+    alt.Chart(df.dropna(subset=["age_cohort"]))
+    .mark_bar(color="darkcyan")
+    .encode(
+        x=alt.X(
+            "age_cohort",
+            type="ordinal",
+            title="Age Cohort",
+            sort=age_cohorts,
+        ),
+        y=alt.Y(
+            "count()",
+            type="quantitative",
+            title="Number of Respondents",
+        ),
+    )
+    .properties(
+        title="Distribution of Age Cohorts (ANES 2020)",
+        width=450,
+        height=280,
+    )
 )
-plt.title("Distribution of Age Cohorts (ANES 2020)")
-plt.xlabel("Age Cohort")
-plt.ylabel("Number of Respondents")
-plt.xticks(rotation=0)
-plt.tight_layout()
-plt.show()
+cohort_chart
 
 # Cross-tabulate candidate preference by age cohort:
 cohort_vote = (
@@ -275,14 +289,29 @@ df["trust_index"] = df[rev_trust_vars].sum(axis=1, min_count=3)
 # In the REPL, inspect the trust scale distribution:
 df["trust_index"].describe()
 
-df["trust_index"].plot(
-    kind="hist", bins=10, edgecolor="black", color="steelblue", figsize=(7, 5)
+trust_chart = (
+    alt.Chart(df.dropna(subset=["trust_index"]))
+    .mark_bar(color="steelblue")
+    .encode(
+        x=alt.X(
+            "trust_index",
+            type="quantitative",
+            bin=alt.Bin(step=1),
+            title="Trust Index Score (3=Lowest, 10=Highest)",
+        ),
+        y=alt.Y(
+            "count()",
+            type="quantitative",
+            title="Number of Respondents",
+        ),
+    )
+    .properties(
+        title="Distribution of Political Trust Index",
+        width=450,
+        height=280,
+    )
 )
-plt.title("Distribution of Political Trust Index (3=Lowest, 10=Highest)")
-plt.xlabel("Trust Index Score")
-plt.ylabel("Frequency")
-plt.tight_layout()
-plt.show()
+trust_chart
 
 
 # ==============================================================================
@@ -313,15 +342,28 @@ df["political_knowledge"] = df[knowledge_items].sum(axis=1)
 # In the REPL, inspect knowledge distribution:
 df["political_knowledge"].value_counts().sort_index()
 
-df["political_knowledge"].value_counts().sort_index().plot(
-    kind="bar", color="darkslateblue", figsize=(7, 5)
+knowledge_chart = (
+    alt.Chart(df)
+    .mark_bar(color="darkslateblue")
+    .encode(
+        x=alt.X(
+            "political_knowledge",
+            type="ordinal",
+            title="Number of Correct Answers (0 to 4)",
+        ),
+        y=alt.Y(
+            "count()",
+            type="quantitative",
+            title="Number of Respondents",
+        ),
+    )
+    .properties(
+        title="Objective Political Knowledge Scale (0 to 4)",
+        width=450,
+        height=280,
+    )
 )
-plt.title("Objective Political Knowledge Scale (0 to 4)")
-plt.xlabel("Number of Correct Answers")
-plt.ylabel("Number of Respondents")
-plt.xticks(rotation=0)
-plt.tight_layout()
-plt.show()
+knowledge_chart
 
 
 # ==============================================================================
@@ -352,14 +394,29 @@ df.loc[valid_ft, "affective_polarization"] = (
 # In the REPL, inspect affective polarization:
 df["affective_polarization"].describe()
 
-df["affective_polarization"].plot(
-    kind="hist", bins=25, edgecolor="black", color="crimson", figsize=(7, 5)
+polarization_chart = (
+    alt.Chart(df.dropna(subset=["affective_polarization"]))
+    .mark_bar(color="crimson")
+    .encode(
+        x=alt.X(
+            "affective_polarization",
+            type="quantitative",
+            bin=alt.Bin(maxbins=25),
+            title="Absolute Partisan Thermometer Difference (|Dem - Rep|)",
+        ),
+        y=alt.Y(
+            "count()",
+            type="quantitative",
+            title="Number of Respondents",
+        ),
+    )
+    .properties(
+        title="Distribution of Affective Polarization (0 to 100)",
+        width=450,
+        height=280,
+    )
 )
-plt.title("Distribution of Affective Polarization (0=None to 100=Maximum)")
-plt.xlabel("Absolute Partisan Thermometer Difference")
-plt.ylabel("Number of Respondents")
-plt.tight_layout()
-plt.show()
+polarization_chart
 
 
 # ==============================================================================
@@ -397,5 +454,4 @@ knowledge_polarization_corr
 #   3. Filter df for strong partisans vs moderates using 'ideology'
 #      (e.g. ideology in [1, 7] vs ideology == 4). Compare their average
 #      affective polarization scores.
-
 
