@@ -1,6 +1,6 @@
 """
 ==============================================================================
-04: Data Exploration - Columns and Summary Statistics
+04: Data Exploration - Columns, Summary Statistics, and Altair
 ==============================================================================
 
 Learning Objectives:
@@ -10,7 +10,8 @@ Learning Objectives:
   - Rename columns to create transparent, self-documenting data
   - Calculate univariate summary statistics: mean, standard deviation, describe
   - Compute frequency and percentage distributions using value_counts()
-  - Visualize continuous and discrete distributions using the pandas plot API
+  - Master declarative graphics using Altair's grammar of graphics
+  - Visualize continuous and discrete distributions (histograms, bar charts)
 ==============================================================================
 """
 
@@ -26,7 +27,7 @@ Learning Objectives:
 # Before building statistical models, you must deeply understand your variables.
 
 import pandas as pd
-import matplotlib.pyplot as plt
+import altair as alt
 
 # Load the American National Election Studies (ANES 2020) dataset:
 data_url = "https://raw.githubusercontent.com/datamisc/ts-2020/main/data.csv"
@@ -149,77 +150,191 @@ vote_pct.round()
 
 
 # ==============================================================================
-# Data Visualization with pandas
+# Declarative Data Visualization with Altair
 # ==============================================================================
-# Plotting distributions is critical for detecting outliers and data errors.
-# In social science research, choice of plot depends on measurement level:
+# In empirical political science, data visualization is essential for uncovering
+# distributions, spotting anomalies, and communicating substantive patterns.
+# Rather than imperative plotting, we use Altair—a declarative statistical
+# visualization library based on the Grammar of Graphics (Vega-Lite).
 #
-#   1. Continuous variables (infinite possible values, e.g. age, income):
-#      Use histograms to visualize the shape of the distribution.
+# Declarative visualization means you declare the statistical relationship
+# between variables and visual channels (x, y, color), and Altair handles the
+# rendering.
 #
-#   2. Discrete / Categorical variables (finite categories, e.g. vote choice):
-#      Use bar plots to compare category frequencies.
+# Altair's Grammar of Graphics follows a three-step structure:
+#   1. Chart: The data table (a pandas DataFrame).
+#   2. Mark: The geometric mark representing data (bar, circle, line, boxplot).
+#   3. Encode: The visual channel mapping (x, y, color, size, shape).
+#
+# Core Altair Data Types (strictly specified using long-form syntax):
+#   - type="quantitative": Continuous numerical values (e.g. age, turnout %)
+#   - type="nominal": Unordered discrete categories (e.g. party, state)
+#   - type="ordinal": Ordered discrete categories (e.g. education level)
+#   - type="temporal": Dates and timestamps
 
 # Continuous variable: Histogram of respondent age
-my_df["age"].plot(kind="hist", bins=30, edgecolor="black")
-plt.title("Distribution of Age in ANES 2020")
-plt.xlabel("Age")
-plt.ylabel("Number of Respondents")
-plt.tight_layout()
-plt.show()
+# For histograms, bin=alt.Bin(maxbins=30) groups continuous values:
+df_age = my_df[my_df["age"] >= 18].copy()
 
-# Discrete variable: Bar plot of voter turnout intentions
-vote_pct.plot(kind="bar", color="steelblue")
-plt.title("Voter Turnout Intention (ANES 2020)")
-plt.xlabel("Intends to Vote (1 = Yes, 2 = No)")
-plt.ylabel("Percentage (%)")
-plt.xticks(rotation=0)
-plt.tight_layout()
-plt.show()
+age_histogram = (
+    alt.Chart(df_age)
+    .mark_bar(color="steelblue")
+    .encode(
+        x=alt.X(
+            "age",
+            type="quantitative",
+            bin=alt.Bin(maxbins=30),
+            title="Respondent Age (years)",
+        ),
+        y=alt.Y(
+            "count()",
+            type="quantitative",
+            title="Number of Respondents",
+        ),
+    )
+    .properties(
+        title="Distribution of Respondent Age (ANES 2020)",
+        width=500,
+        height=300,
+    )
+)
+
+# In the REPL, sending the chart name evaluates and renders the figure:
+age_histogram
+
+# Discrete variable: Bar chart of voter turnout intentions
+# Step 1: Use pandas to compute a clean frequency table:
+vote_valid = my_df[my_df["vote"].isin([1, 2])].copy()
+vote_freq = (
+    vote_valid["vote"]
+    .value_counts(normalize=True)
+    .mul(100)
+    .round(1)
+    .reset_index()
+)
+vote_freq.columns = ["vote_code", "share"]
+vote_freq["label"] = vote_freq["vote_code"].map({
+    1: "Intends to Vote",
+    2: "Does Not Intend",
+})
+
+# Step 2: Build declarative bar chart with explicit types:
+turnout_bar = (
+    alt.Chart(vote_freq)
+    .mark_bar(color="#2b5c8f")
+    .encode(
+        x=alt.X(
+            "label",
+            type="nominal",
+            title="Turnout Intention",
+            sort=None,
+        ),
+        y=alt.Y(
+            "share",
+            type="quantitative",
+            title="Percentage of Respondents (%)",
+        ),
+    )
+    .properties(
+        title="2020 Voter Turnout Intentions (ANES)",
+        width=400,
+        height=300,
+    )
+)
+
+turnout_bar
 
 
 # ------------------------------------------------------------------------------
-# Hack-Time: Visualizing Ideological Distribution
+# Hack-Time: Visualizing Ideological Distribution with Altair
 # ------------------------------------------------------------------------------
 # In ANES 2020, ideology is measured on a 1-7 scale:
 #   1 = Extremely Liberal, 4 = Moderate, 7 = Extremely Conservative
 #   (Negative values like -9 and -8 represent non-responses and refusal)
 #
 # Tasks:
-#   1. Create a boolean mask keeping only valid ideology scores between 1 and 7:
-#      valid_ideology = my_df["ideology"].between(1, 7)
-#   2. Plot a histogram or bar plot of valid ideology scores.
-#   3. Are American voters polarized or concentrated in the middle?
-
-
+#   1. Create a filtered DataFrame keeping only valid ideology scores (1 to 7):
+#      valid_ideo = my_df[my_df["ideology"].between(1, 7)]
+#   2. Build an Altair bar chart displaying the frequency of each score:
+#      - Use alt.Chart(valid_ideo).mark_bar()
+#      - Map x to alt.X("ideology", type="ordinal", title="Ideology (1-7)")
+#      - Map y to alt.Y("count()", type="quantitative", title="Count")
+#      - Add properties: title="Ideology Distribution", width=450, height=280
+#   3. Evaluate the chart in the REPL. Are voters polarized or centrist?
 
 
 # ==============================================================================
-# Polished Visualizations & Figure Anatomy
+# Polished Visualizations: Figure Anatomy & Communication
 # ==============================================================================
-# Before presenting graphics in presentations or papers, recode numeric codes
-# into human-readable labels and add clear titles and axes:
+# In scientific research, every figure must communicate clearly:
+#   - Title stating the main substantive finding
+#   - Subtitle providing context or sample details
+#   - Data source attribution
+#   - Informative axis titles and readable categories
+#
+# Let us visualize 2020 presidential candidate vote intentions:
 
-mask = my_df["vote_int"].between(1, 4)
-candidate_labels = {
-    1: "Joe Biden",
-    2: "Donald Trump",
-    3: "Jo Jorgensen",
-    4: "Howie Hawkins",
+mask_cand = my_df["vote_int"].between(1, 4)
+candidate_names = {
+    1: "Joe Biden (Dem)",
+    2: "Donald Trump (Rep)",
+    3: "Jo Jorgensen (Lib)",
+    4: "Howie Hawkins (Grn)",
 }
 
-candidate_shares = (
-    my_df.loc[mask, "vote_int"]
-    .replace(candidate_labels)
-    .value_counts(normalize=True) * 100
+candidate_df = (
+    my_df.loc[mask_cand, "vote_int"]
+    .map(candidate_names)
+    .value_counts(normalize=True)
+    .mul(100)
+    .round(1)
+    .reset_index()
+)
+candidate_df.columns = ["candidate", "share"]
+
+# Horizontal bar chart sorted by vote share with informative subtitles:
+candidate_chart = (
+    alt.Chart(candidate_df)
+    .mark_bar()
+    .encode(
+        x=alt.X(
+            "share",
+            type="quantitative",
+            title="Percentage of Valid Responses (%)",
+        ),
+        y=alt.Y(
+            "candidate",
+            type="nominal",
+            title="Candidate",
+            sort="-x",
+        ),
+        color=alt.Color(
+            "candidate",
+            type="nominal",
+            legend=None,
+            scale=alt.Scale(
+                domain=[
+                    "Joe Biden (Dem)",
+                    "Donald Trump (Rep)",
+                    "Jo Jorgensen (Lib)",
+                    "Howie Hawkins (Grn)",
+                ],
+                range=["#2b5c8f", "#d95f02", "#e6ab02", "#2ca02c"],
+            ),
+        ),
+    )
+    .properties(
+        title=alt.TitleParams(
+            text="2020 Presidential Vote Intentions",
+            subtitle=[
+                "Share of respondents intending to vote for each candidate",
+                "Source: American National Election Studies (ANES 2020)",
+            ],
+            anchor="start",
+        ),
+        width=500,
+        height=250,
+    )
 )
 
-candidate_shares.plot(
-    kind="bar",
-    title="2020 Presidential Vote Intentions (ANES)",
-    ylabel="Percentage of Valid Responses (%)",
-    color=["blue", "red", "gold", "green"],
-)
-plt.xticks(rotation=0)
-plt.tight_layout()
-plt.show()
+candidate_chart
