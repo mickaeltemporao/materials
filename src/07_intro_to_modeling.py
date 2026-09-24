@@ -11,7 +11,7 @@ Learning Objectives:
   - Understand the geometry of Ordinary Least Squares (OLS) vs. random lines
   - Estimate bivariate regression models in Python with statsmodels.formula.api
   - Interpret key regression quantities: intercept, slope, p-value, and R²
-  - Visualize fitted regression lines, confidence intervals, and residuals
+  - Visualize fitted regression lines, observed data, and residuals in Altair
 ==============================================================================
 """
 
@@ -35,7 +35,7 @@ Learning Objectives:
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import altair as alt
 import statsmodels.formula.api as smf
 
 
@@ -77,20 +77,48 @@ residuals = commute_df["time_to_iep"] - mean_commute
 sse_baseline = (residuals ** 2).sum()
 sse_baseline
 
-# Visualize the baseline model:
-commute_df["time_to_iep"].plot(
-    kind="hist", bins=12, edgecolor="black", color="skyblue", figsize=(7, 5)
+# Visualize the baseline model with Altair:
+base_hist = (
+    alt.Chart(commute_df)
+    .mark_bar(color="skyblue")
+    .encode(
+        x=alt.X(
+            "time_to_iep",
+            type="quantitative",
+            bin=alt.Bin(maxbins=12),
+            title="Commute Time (minutes)",
+        ),
+        y=alt.Y(
+            "count()",
+            type="quantitative",
+            title="Number of Students",
+        ),
+    )
 )
-plt.axvline(mean_commute, color="crimson", linestyle="--", linewidth=2)
-plt.text(
-    mean_commute + 0.1, 8, f"Mean = {mean_commute:.2f} min",
-    color="crimson", fontsize=11, fontweight="bold"
+
+mean_rule = (
+    alt.Chart(pd.DataFrame({"mean_val": [mean_commute]}))
+    .mark_rule(color="crimson", strokeWidth=2, strokeDash=[5, 5])
+    .encode(
+        x=alt.X("mean_val", type="quantitative"),
+    )
 )
-plt.title("Baseline Model: Commute Times to Sciences Po Bordeaux")
-plt.xlabel("Commute Time (minutes)")
-plt.ylabel("Frequency")
-plt.tight_layout()
-plt.show()
+
+baseline_chart = (
+    (base_hist + mean_rule)
+    .properties(
+        title=alt.TitleParams(
+            text="Baseline Model: Commute Times to Sciences Po Bordeaux",
+            subtitle=[
+                f"Sample mean = {mean_commute:.2f} minutes (minimizes SSE)",
+            ],
+            anchor="start",
+        ),
+        width=450,
+        height=280,
+    )
+)
+baseline_chart
 
 
 # ==============================================================================
@@ -215,31 +243,58 @@ sample_viz = clean_data.sample(40, random_state=42).sort_values("age")
 sample_model = smf.ols("ideology ~ age", data=sample_viz).fit()
 sample_viz["predicted"] = sample_model.fittedvalues
 
-plt.figure(figsize=(8, 5))
-# Observed survey points:
-plt.scatter(
-    sample_viz["age"], sample_viz["ideology"],
-    color="steelblue", label="Observed Survey Data (Y_i)", zorder=3
-)
-# Fitted OLS regression line:
-plt.plot(
-    sample_viz["age"], sample_viz["predicted"],
-    color="crimson", linewidth=2.5, label="Fitted OLS Line (Y_hat)"
-)
-# Vertical residual lines (drop-lines):
-for _, row in sample_viz.iterrows():
-    plt.plot(
-        [row["age"], row["age"]],
-        [row["ideology"], row["predicted"]],
-        color="gray", linestyle=":", alpha=0.7
+# Visualize regression line, observed points, and residual drop-lines:
+scatter_pts = (
+    alt.Chart(sample_viz)
+    .mark_circle(size=60, color="steelblue")
+    .encode(
+        x=alt.X(
+            "age",
+            type="quantitative",
+            title="Respondent Age",
+        ),
+        y=alt.Y(
+            "ideology",
+            type="quantitative",
+            title="Ideological Self-Placement (1=Lib to 7=Con)",
+        ),
     )
+)
 
-plt.title("OLS Bivariate Regression: Ideology ~ Age (with Residuals)")
-plt.xlabel("Respondent Age")
-plt.ylabel("Ideological Self-Placement (1=Lib to 7=Con)")
-plt.legend()
-plt.tight_layout()
-plt.show()
+reg_line = (
+    alt.Chart(sample_viz)
+    .mark_line(color="crimson", strokeWidth=2.5)
+    .encode(
+        x=alt.X("age", type="quantitative"),
+        y=alt.Y("predicted", type="quantitative"),
+    )
+)
+
+residual_rules = (
+    alt.Chart(sample_viz)
+    .mark_rule(color="gray", strokeDash=[3, 3], opacity=0.7)
+    .encode(
+        x=alt.X("age", type="quantitative"),
+        y=alt.Y("ideology", type="quantitative"),
+        y2=alt.Y2("predicted"),
+    )
+)
+
+reg_chart = (
+    (residual_rules + reg_line + scatter_pts)
+    .properties(
+        title=alt.TitleParams(
+            text="OLS Bivariate Regression: Ideology ~ Age",
+            subtitle=[
+                "Red line = OLS fit; gray dashed lines = residual errors (e_i)",
+            ],
+            anchor="start",
+        ),
+        width=500,
+        height=320,
+    )
+)
+reg_chart
 
 
 # ------------------------------------------------------------------------------
@@ -284,5 +339,4 @@ plt.show()
 #   4. In the REPL, inspect trust_model.summary().
 #   5. Is the slope positive or negative? Is it statistically significant?
 #      What does this imply about trust under the Trump presidency?
-
 
