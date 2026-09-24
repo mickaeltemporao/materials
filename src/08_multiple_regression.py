@@ -10,7 +10,7 @@ Learning Objectives:
   - Estimate nested models: Baseline -> Demographics -> Political Controls
   - Compare model performance using summary_col, R², and adjusted R²
   - Export publication-ready regression tables to Typst using mmisc.typst
-  - Visualize regression results using dot-and-whisker coefficient plots
+  - Visualize regression results using Altair dot-and-whisker coefficient plots
   - Interpret substantive effects and confidence intervals in political research
 ==============================================================================
 """
@@ -34,7 +34,7 @@ Learning Objectives:
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import altair as alt
 import statsmodels.formula.api as smf
 from statsmodels.iolib.summary2 import summary_col
 from mmisc.typst import make_table
@@ -269,31 +269,61 @@ var_labels = {
 
 coef_df.index = [var_labels.get(idx, idx) for idx in coef_df.index]
 
-# Generate coefficient plot:
-plt.figure(figsize=(9, 6))
-plt.errorbar(
-    coef_df["coef"],
-    coef_df.index,
-    xerr=(
-        coef_df["coef"] - coef_df["lower_ci"],
-        coef_df["upper_ci"] - coef_df["coef"],
-    ),
-    fmt="o",
-    color="steelblue",
-    ecolor="darkslategray",
-    elinewidth=2,
-    capsize=4,
+# Prepare a clean DataFrame for Altair plotting:
+plot_df = coef_df.reset_index()
+plot_df.columns = ["variable", "coef", "lower_ci", "upper_ci", "pvalue"]
+
+# Build declarative dot-and-whisker coefficient plot:
+whiskers = (
+    alt.Chart(plot_df)
+    .mark_rule(color="#2b5c8f", strokeWidth=2)
+    .encode(
+        x=alt.X(
+            "lower_ci",
+            type="quantitative",
+            title="Estimated Coefficient (95% CI)",
+        ),
+        x2=alt.X2("upper_ci"),
+        y=alt.Y(
+            "variable",
+            type="nominal",
+            title="Predictor Variable",
+            sort=None,
+        ),
+    )
 )
-plt.axvline(x=0, color="crimson", linestyle="--", linewidth=1.2)
-plt.title(
-    "Predictors of Affective Polarization (Full OLS Model)",
-    fontsize=12, fontweight="bold"
+
+points = (
+    alt.Chart(plot_df)
+    .mark_circle(size=70, color="#2b5c8f")
+    .encode(
+        x=alt.X("coef", type="quantitative"),
+        y=alt.Y("variable", type="nominal", sort=None),
+    )
 )
-plt.xlabel("Estimated Coefficient (Change in Polarization)")
-plt.ylabel("Predictor Variable")
-plt.grid(axis="x", linestyle=":", alpha=0.6)
-plt.tight_layout()
-plt.show()
+
+zero_rule = (
+    alt.Chart()
+    .mark_rule(color="crimson", strokeDash=[4, 4], strokeWidth=1.5)
+    .encode(x=alt.datum(0))
+)
+
+coef_chart = (
+    (zero_rule + whiskers + points)
+    .properties(
+        title=alt.TitleParams(
+            text="Predictors of Affective Polarization (Full OLS Model)",
+            subtitle=[
+                "Point estimates and 95% confidence intervals from Model 3",
+                "Source: American National Election Studies (ANES 2020)",
+            ],
+            anchor="start",
+        ),
+        width=500,
+        height=320,
+    )
+)
+coef_chart
 
 
 # ------------------------------------------------------------------------------
@@ -309,5 +339,4 @@ plt.show()
 #      Is this difference statistically significant?
 #   3. Does education have a statistically significant effect once political
 #      knowledge and ideology are accounted for?
-
 
