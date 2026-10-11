@@ -41,7 +41,7 @@ anes_data = pd.read_csv(data_url, compression="gzip", low_memory=False)
 #   1. Check the type of anes_data in the REPL.
 #   2. Inspect the number of rows and columns using the .shape attribute.
 
-
+...
 
 
 # ==============================================================================
@@ -80,7 +80,7 @@ my_data.head()
 #   1. Evaluate anes_data.head() in the REPL to view the first 5 rows.
 #   2. Check the column names of anes_data using anes_data.columns.
 
-
+...
 
 
 # ==============================================================================
@@ -146,7 +146,7 @@ vote_pct.round()
 #   2. Use .describe() on my_df["age"] to view all summary statistics.
 #   3. Use .describe() on my_df["ideology"] to inspect the ideology scale.
 
-
+...
 
 
 # ==============================================================================
@@ -261,6 +261,8 @@ turnout_bar
 #      - Map y to alt.Y("count()", type="quantitative", title="Count")
 #      - Add properties: title="Ideology Distribution", width=450, height=280
 #   3. Evaluate the chart in the REPL. Are voters polarized or centrist?
+
+...
 
 
 # ==============================================================================

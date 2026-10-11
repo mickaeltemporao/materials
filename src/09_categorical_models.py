@@ -206,6 +206,8 @@ scurve_chart
 #   4. Which predictor has the largest multiplicative effect on the odds
 #      of turning out to vote?
 
+...
+
 
 # ==============================================================================
 # Ordered Logistic Regression: Ranked Survey Responses
@@ -282,3 +284,4 @@ mn_model.summary()
 #   3. Label columns as ["P(Biden)", "P(Trump)", "P(Other)"].
 #   4. Which candidate is the predicted winner for each voter profile?
 
+...

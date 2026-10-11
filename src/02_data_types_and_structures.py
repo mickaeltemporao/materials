@@ -56,7 +56,7 @@ three = "3"
 #   2. What happens if you add seven + three? Try it in the REPL!
 #   3. Document your observations with a comment below.
 
-
+...
 
 
 # ==============================================================================
@@ -86,7 +86,7 @@ type(results_2024)
 #   1. Check what happens if you try to add a number to results_2024 (e.g. 538).
 #   2. Observe the error: why can you not add an integer to NoneType?
 
-
+...
 
 
 # ==============================================================================
@@ -116,7 +116,7 @@ year != 2024
 #   2. Test if party_1 is equal to party_2.
 #   3. Test if a * b is strictly less than 250.
 
-
+...
 
 
 # ==============================================================================
@@ -157,7 +157,7 @@ employed and not twitter
 #      this respondent is eligible to run for President.
 #   2. Test if the respondent either voted OR uses Twitter.
 
-
+...
 
 
 # ==============================================================================
@@ -189,7 +189,7 @@ respondent_2 = [age_2, sex_2, country_2, employed_2, voted_2, twitter_2]
 
 #   2. Create a list named respondents containing [respondent_1, respondent_2].
 
-
+...
 
 
 # ==============================================================================
@@ -220,7 +220,7 @@ data[1]
 #   1. Using the data list, print the turnout for the 2016 election.
 #   2. Calculate the average turnout of 2012 (index 2) and 2016 (index 6).
 
-
+...
 
 
 # ==============================================================================
@@ -240,7 +240,7 @@ data[4:6]
 #   1. Slice the winning party name of the 2020 election from data.
 #   2. Slice the first four elements of data.
 
-
+...
 
 
 # ==============================================================================
@@ -259,7 +259,7 @@ data
 #   1. Fix the value at index 7 back to "democratic".
 #   2. Verify your change by evaluating data.
 
-
+...
 
 
 # ==============================================================================
@@ -280,7 +280,7 @@ data
 #   2. Concatenate year_2004 to data.
 #   3. Check the new length of data using len().
 
-
+...
 
 
 # ==============================================================================
@@ -302,3 +302,5 @@ survey_sample[0][0]
 # Tasks:
 #   1. Access the country of respondent 3 using index notation.
 #   2. Calculate the average age across respondent_1 and respondent_3.
+
+...

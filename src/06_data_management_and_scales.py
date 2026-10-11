@@ -151,6 +151,8 @@ electorate_share.round(1)
 #   2. Compute the mean of 'vote_trump' in the REPL.
 #   3. What does this mean represent substantively?
 
+...
+
 
 # ==============================================================================
 # Discretizing Continuous Variables with pd.cut()
@@ -229,6 +231,8 @@ cohort_vote.round(1)
 #   2. Compute a cross-tabulation of 'covid_approve' by 'age_cohort'
 #      normalized across rows (normalize="index").
 #   3. Which age cohort expressed the highest approval of federal handling?
+
+...
 
 
 # ==============================================================================
@@ -455,3 +459,4 @@ knowledge_polarization_corr
 #      (e.g. ideology in [1, 7] vs ideology == 4). Compare their average
 #      affective polarization scores.
 
+...

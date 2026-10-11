@@ -322,6 +322,8 @@ reg_chart
 #      r_squared = 1 - (bivariate_model.ssr / sse_baseline)
 #   4. Verify that this manual calculation matches bivariate_model.rsquared.
 
+...
+
 
 # ------------------------------------------------------------------------------
 # Hack-Time: Modeling Political Trust as a Function of Ideology
@@ -340,3 +342,4 @@ reg_chart
 #   5. Is the slope positive or negative? Is it statistically significant?
 #      What does this imply about trust under the Trump presidency?
 
+...

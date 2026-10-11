@@ -55,7 +55,7 @@ print("I'm excited to learn Python!")
 #   2. Print your first and last name.
 # (Write your code below and send each line to the REPL with Shift+Enter)
 
-
+...
 
 
 # ==============================================================================
@@ -85,6 +85,7 @@ print("|_____|")
 
 print("Let's do some math!")
 print(5 + 7)
+...
 
 
 # ==============================================================================
@@ -111,7 +112,7 @@ print(5 + 7)
 #   3. Perform another mathematical operation of your choice, and add a comment
 #      documenting what your operation does.
 
-
+...
 
 
 # ==============================================================================
@@ -164,6 +165,7 @@ print(winner_2, turnout_2)
 #   3. Fix the capitalization error and run it again.
 
 # print(Winner_2)
+...
 
 
 # ==============================================================================
@@ -213,12 +215,11 @@ winner_3 = ...
 
 # Task 2: By how many percentage points did turnout change in 2016 vs 2012?
 # (Write your code below)
-
+...
 
 # Task 3: What is the average turnout across all 3 elections (2012, 2016, 2020)?
 # (Write your code below)
-
-
+...
 
 
 # ==============================================================================

@@ -333,6 +333,8 @@ dashboard
 #      significant (p < 0.05) in a different color from non-significant ones.
 #   3. Test your enhanced function on full_model.
 
+...
+
 
 # ------------------------------------------------------------------------------
 # Hack-Time: Building an Interactive Exploration of Ideology
@@ -346,3 +348,4 @@ dashboard
 #   3. What pattern do you observe in how partisans evaluate Democrats as
 #      their ideological self-placement becomes more conservative?
 
+...

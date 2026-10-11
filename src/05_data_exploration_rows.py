@@ -185,6 +185,8 @@ clean_ideo_bar
 #      'vote_int' (positive values >= 1).
 #   4. Use df[...] to check how many respondents remain with valid vote data.
 
+...
+
 
 # ==============================================================================
 # Substantive Application: The Youth Vote in the United States
@@ -215,6 +217,8 @@ df[~mask_youth]["ideology"].mean()
 #   2. Calculate the percentage of older respondents (age > 30) who intend
 #      to vote.
 #   3. Does the survey evidence support the hypothesis of a youth turnout gap?
+
+...
 
 
 # ==============================================================================
@@ -496,3 +500,4 @@ stacked_bar
 #      each age group.
 #   4. Visualize this comparison with an Altair stacked or grouped bar plot.
 
+...

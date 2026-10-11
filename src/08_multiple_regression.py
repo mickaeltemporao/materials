@@ -137,6 +137,8 @@ model_1.summary()
 #   2. Is the relationship positive or negative?
 #   3. Does this initial bivariate evidence support H1 or H0?
 
+...
+
 
 # ==============================================================================
 # Model 2: Adding Demographic Controls
@@ -340,3 +342,4 @@ coef_chart
 #   3. Does education have a statistically significant effect once political
 #      knowledge and ideology are accounted for?
 
+...

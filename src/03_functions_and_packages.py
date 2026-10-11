@@ -38,7 +38,7 @@ Learning Objectives:
 #   1. Write and evaluate three built-in functions we used in lessons 01 and 02.
 #   2. Use type() to check the type of the print function itself.
 
-
+...
 
 
 # ==============================================================================
@@ -61,7 +61,7 @@ print("Democrat", "Republican", "Independent", sep=" | ")
 #   1. Use help(print) to see all optional parameters accepted by print().
 #   2. Print three words separated by three dashes ("---") using sep.
 
-
+...
 
 
 # ==============================================================================
@@ -91,7 +91,7 @@ turnout_sample
 #   1. Create a list party = ["Dem", "Rep", "Dem", "Dem", "Rep", "Rep", "Dem"].
 #   2. Use a list method to count how many times "Dem" appears in the list.
 
-
+...
 
 
 # ==============================================================================
@@ -111,7 +111,7 @@ text.strip().lower()
 #   1. Given candidate = "  kamala harris  ", chain strip() and title()
 #      to clean leading whitespace and capitalize the words properly.
 
-
+...
 
 
 # ==============================================================================
@@ -141,7 +141,7 @@ greet("Alex")
 #      t1 from t2 and returns the difference.
 #   2. Test your function using the 2016 (55.7) and 2020 (66.8) turnouts.
 
-
+...
 
 
 # ==============================================================================
@@ -167,7 +167,7 @@ calculate_mean(turnout_history)
 #      the mean and the number of observations (as a tuple or list).
 #   2. Call summarize_turnout(turnout_history) and inspect the output.
 
-
+...
 
 
 # ==============================================================================
@@ -192,7 +192,7 @@ math.pi
 #   1. Check the documentation of math.floor using help(math.floor).
 #   2. Apply math.floor to 66.8.
 
-
+...
 
 
 # ==============================================================================
@@ -216,7 +216,7 @@ randint(1, 100)
 #   1. Import the datetime module using the alias dt.
 #   2. Inspect dt using type().
 
-
+...
 
 
 # ==============================================================================
@@ -248,3 +248,5 @@ df.head()
 # Tasks:
 #   1. Send df["V201033"].value_counts() to the REPL to inspect frequencies.
 #   2. Add normalize=True inside value_counts() to see proportions instead!
+
+...
