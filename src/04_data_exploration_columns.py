@@ -52,8 +52,7 @@ anes_data = pd.read_csv(data_url, compression="gzip", low_memory=False)
 #   - A Series is a single 1-dimensional column from a DataFrame.
 #
 # Concept Diagram: Series vs DataFrame
-# https://storage.googleapis.com/lds-media/images/
-#   series-and-dataframe.width-1200.png
+# https://pandas.pydata.org/docs/_images/01_table_dataframe.svg
 #
 #       DataFrame ('my_df')                      Series ('age')
 #       +---------+----------+-------+-------+     +-------+
@@ -106,11 +105,11 @@ my_data.head()
 # Concept Diagram: Selecting Columns
 # https://pandas.pydata.org/docs/_images/03_subset_columns.svg
 #
-#   DataFrame (anes_data)         Select my_vars           my_df
-#   +--------+--------+--+        ['V201032', 'V201507x']  +--------+--------+
-#   |V201032 |V201507x|..| ──────────────────────────────> |V201032 |V201507x|
-#   +--------+--------+--+                                 +--------+--------+
-#   | 1      | 45     |..|                                 | 1      | 45     |
+#   DataFrame (anes_data)         Select my_vars               my_df
+#   +-----+-----+-----+-----+     ["V1", "V2"]                 +-----+-----+
+#   | V1  | V2  | V3  | ... |  ─────────────────────────>      | V1  | V2  |
+#   +-----+-----+-----+-----+                                  +-----+-----+
+#   | ... | ... | ... | ... |                                  | ... | ... |
 #
 # 1. Selecting a single column returns a Series:
 #    df["column_name"]
@@ -189,10 +188,8 @@ vote_pct.round(1)
 # Datasets with identical means and standard deviations can have completely
 # different real-world distributions!
 #
-# Concept: Same stats, different graphs (Datasaurus Dozen animation):
-# https://damassets.autodesk.net/content/dam/autodesk/
-#   research/publications-assets/gifs/
-#   same-stats-different-graphs/DinoSequentialSmaller.gif
+# Concept: Same stats, different graphs (Datasaurus Dozen):
+# https://en.wikipedia.org/wiki/Datasaurus_dozen
 #
 # In Python, we use Altair for statistical visualization. Altair follows a
 # simple three-step declarative workflow:
@@ -292,4 +289,4 @@ df_cand.head()
 alt.Chart(df_cand).mark_bar().encode(x="votes", y="candidate")
 
 # Anatomy of a Figure Reference:
-# https://matplotlib.org/3.1.1/_images/anatomy.png
+# https://matplotlib.org/stable/_images/anatomy.png
