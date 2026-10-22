@@ -38,7 +38,7 @@ anes_data = pd.read_csv(data_url, compression="gzip", low_memory=False)
 # Hack-Time: Inspecting Raw Survey Data
 # ------------------------------------------------------------------------------
 # Tasks:
-#   1. Check the type of anes_data in the REPL.
+#   1. Run type(anes_data) to check the type of anes_data.
 #   2. Inspect the number of rows and columns using the .shape attribute.
 
 ...
@@ -77,7 +77,7 @@ my_data = pd.DataFrame({
     "party": party,
 })
 
-# In the REPL, evaluate my_data directly to view the table:
+# Run my_data directly to view the table:
 my_data
 
 # Use .info() to inspect data types and non-null counts:
@@ -91,7 +91,7 @@ my_data.head()
 # Hack-Time: Exploring the Full ANES Dataset
 # ------------------------------------------------------------------------------
 # Tasks:
-#   1. Evaluate anes_data.head() in the REPL to view the first 5 rows.
+#   1. Run anes_data.head() to view the first 5 rows.
 #   2. Check the column names of anes_data using anes_data.columns.
 
 ...
@@ -106,11 +106,11 @@ my_data.head()
 # Concept Diagram: Selecting Columns
 # https://pandas.pydata.org/docs/_images/03_subset_columns.svg
 #
-#   DataFrame (anes_data)         Select my_vars               my_df
-#   +-----+-----+-----+-----+     ["vote", "age", ...]         +-----+-----+
-#   | V1  | V2  | V3  | ... |  ─────────────────────────>      |vote | age |
-#   +-----+-----+-----+-----+                                  +-----+-----+
-#   | ... | ... | ... | ... |                                  | ... | ... |
+#   DataFrame (anes_data)         Select my_vars           my_df
+#   +--------+--------+--+        ['V201032', 'V201507x']  +--------+--------+
+#   |V201032 |V201507x|..| ──────────────────────────────> |V201032 |V201507x|
+#   +--------+--------+--+                                 +--------+--------+
+#   | 1      | 45     |..|                                 | 1      | 45     |
 #
 # 1. Selecting a single column returns a Series:
 #    df["column_name"]
@@ -139,6 +139,12 @@ my_df.head()
 # ==============================================================================
 # Raw survey codes (e.g. V201507x) make analysis error-prone.
 # Always rename variables to intuitive, descriptive names:
+#
+#   my_df (raw survey codes)                             my_df (clean names)
+#   +----------+----------+                                   +-------+-------+
+#   | V201032  | V201507x |     my_df.columns = [...]         | vote  | age   |
+#   +----------+----------+   ─────────────────────────>      +-------+-------+
+#   | 1        | 45       |                                   | 1     | 45    |
 
 my_df.columns = ["vote", "vote_int", "age", "ideology"]
 my_df.head()
@@ -167,7 +173,7 @@ vote_pct.round(1)
 # ------------------------------------------------------------------------------
 # Tasks:
 #   1. What is the average age of respondents in the ANES dataset?
-#      Calculate my_df["age"].mean() in the REPL.
+#      Calculate my_df["age"].mean() by running the code.
 #   2. Use .describe() on my_df["age"] to view all summary statistics
 #      (mean, standard deviation, quartiles, min, max).
 #   3. What is the average ideology of respondents?
@@ -244,7 +250,7 @@ alt.Chart(df_vote).mark_bar().encode(x="vote", y="count")
 # Tasks:
 #   1. Compute frequencies across all observations of my_df["ideology"]
 #      using .value_counts().reset_index() and save it as df_ideo.
-#   2. Inspect df_ideo.head() in the REPL.
+#   2. Run df_ideo.head() to inspect the prepared table.
 #   3. Visualize the distribution with:
 #      alt.Chart(df_ideo).mark_bar().encode(x="ideology", y="count")
 #   4. Look at the chart: do respondents cluster around 4 (moderate) or do

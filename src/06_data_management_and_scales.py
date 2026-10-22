@@ -56,7 +56,7 @@ var_dict = {
 df = anes_data[list(var_dict.keys())].copy()
 df.columns = list(var_dict.values())
 
-# In the REPL, inspect the raw dataset:
+# Run the code to inspect the raw dataset:
 df.shape
 df.head()
 
@@ -87,7 +87,7 @@ df.loc[df["vote_int"] == 1, "candidate"] = "Joe Biden"
 df.loc[df["vote_int"] == 2, "candidate"] = "Donald Trump"
 df.loc[df["vote_int"].isin([3, 4, 5]), "candidate"] = "Third Party / Other"
 
-# In the REPL, inspect the frequency of recoded candidate preferences:
+# Run the code to inspect the frequency of recoded candidate preferences:
 df["candidate"].value_counts(dropna=False)
 
 # Strategy 2: Recoding using .replace() and a dictionary
@@ -112,7 +112,7 @@ df["covid_label"].value_counts()
 # ------------------------------------------------------------------------------
 # Intentional Error Challenge: Forgetting Assignment with .replace()
 # ------------------------------------------------------------------------------
-# 1. Uncomment the lines below and send them to the REPL with Shift+Enter.
+# 1. Uncomment the lines below and run them with Shift+Enter.
 # 2. Inspect the output: why did the underlying column remain unchanged?
 # 3. Fix the code by assigning the returned Series or creating a column.
 # df["covid"].replace(covid_labels)
@@ -146,7 +146,7 @@ electorate_share = (
     .value_counts(normalize=True) * 100
 )
 
-# In the REPL, compare both estimates:
+# Run the code to compare both estimates:
 two_party_share.round(1)
 electorate_share.round(1)
 
@@ -160,7 +160,7 @@ electorate_share.round(1)
 # Tasks:
 #   1. Create a binary dummy variable named 'vote_trump' in df that takes
 #      the value 1 if candidate == "Donald Trump", and 0 otherwise.
-#   2. Compute the mean of 'vote_trump' in the REPL.
+#   2. Run the code to compute the mean of 'vote_trump'.
 #   3. What does this mean represent substantively?
 
 ...
@@ -190,7 +190,7 @@ age_cohorts = ["18-35", "36-50", "51-65", "66+"]
 
 df["age_cohort"] = pd.cut(df["age_clean"], bins=age_bins, labels=age_cohorts)
 
-# In the REPL, inspect the distribution of age cohorts:
+# Run the code to inspect the distribution of age cohorts:
 df["age_cohort"].value_counts().sort_index()
 
 
@@ -315,7 +315,7 @@ df["trust_people_rev"] = 3 - df["trust_people"]
 rev_trust_vars = ["trust_gov_rev", "trust_corrupt_rev", "trust_people_rev"]
 df["trust_index"] = df[rev_trust_vars].sum(axis=1, min_count=3)
 
-# In the REPL, inspect the trust scale distribution:
+# Run the code to inspect the trust scale distribution:
 df["trust_index"].describe()
 
 trust_chart = (
@@ -368,7 +368,7 @@ knowledge_items = [
 # Sum factual scores into a 0-4 composite scale:
 df["political_knowledge"] = df[knowledge_items].sum(axis=1)
 
-# In the REPL, inspect knowledge distribution:
+# Run the code to inspect knowledge distribution:
 df["political_knowledge"].value_counts().sort_index()
 
 knowledge_chart = (
@@ -420,7 +420,7 @@ df.loc[valid_ft, "affective_polarization"] = (
     - df.loc[valid_ft, "feeling_republican"]
 ).abs()
 
-# In the REPL, inspect affective polarization:
+# Run the code to inspect affective polarization:
 df["affective_polarization"].describe()
 
 polarization_chart = (

@@ -59,7 +59,7 @@ commute_df = pd.DataFrame({
     ]
 })
 
-# In the REPL, calculate the sample mean commute time:
+# Run the code to calculate the sample mean commute time:
 mean_commute = commute_df["time_to_iep"].mean()
 mean_commute
 
@@ -202,7 +202,7 @@ clean_data = clean_data[
 # Formula syntax: "dependent_variable ~ independent_variable"
 bivariate_model = smf.ols(formula="ideology ~ age", data=clean_data).fit()
 
-# In the REPL, inspect the full estimation summary:
+# Run the code to inspect the full estimation summary:
 bivariate_model.summary()
 
 
@@ -303,7 +303,7 @@ reg_chart
 # In formula syntax, the relationship between DV and IV is specified using
 # the tilde '~' (read as "modeled as a function of"), NOT the equals sign '='.
 #
-# 1. Uncomment the line below and send it to the REPL with Shift+Enter.
+# 1. Uncomment the line below and run it with Shift+Enter.
 # 2. Read the error message: what error did Python raise?
 # 3. Fix the syntax and run it again.
 # broken_model = smf.ols(formula="ideology = age", data=clean_data).fit()
@@ -338,7 +338,7 @@ reg_chart
 #   3. Estimate a bivariate regression:
 #      formula = "trust_gov ~ ideology"
 #      trust_model = smf.ols(formula, data=df_trust).fit()
-#   4. In the REPL, inspect trust_model.summary().
+#   4. Run trust_model.summary() to inspect the results.
 #   5. Is the slope positive or negative? Is it statistically significant?
 #      What does this imply about trust under the Trump presidency?
 

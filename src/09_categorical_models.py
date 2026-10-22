@@ -84,7 +84,7 @@ two_party["vote_biden"] = (two_party["vote_int"] == 1).astype(int)
 formula_logit = "vote_biden ~ ideology + age + female + educ"
 logit_model = smf.logit(formula=formula_logit, data=two_party).fit()
 
-# In the REPL, evaluate model summary:
+# Run the code to evaluate the model summary:
 logit_model.summary()
 
 
@@ -107,7 +107,7 @@ odds_ratios = pd.DataFrame({
     "p-value": logit_model.pvalues,
 })
 
-# In the REPL, inspect odds ratios:
+# Run the code to inspect odds ratios:
 odds_ratios.round(3)
 
 # Substantive interpretation:
@@ -185,7 +185,7 @@ scurve_chart
 # In statsmodels, passing unmapped string columns into binary logit will
 # raise an error if the dependent variable is not numeric (0 or 1).
 #
-# 1. Uncomment the model below and send it to the REPL with Shift+Enter.
+# 1. Uncomment the model below and run it with Shift+Enter.
 # 2. Inspect the error message: what did Python raise?
 # 3. Why must binary dependent variables be encoded as 0 and 1?
 # broken_df = two_party.copy()
@@ -230,7 +230,7 @@ ord_model = OrderedModel.from_formula(
     distr="logit",
 ).fit(disp=False)
 
-# In the REPL, evaluate the ordered logit model:
+# Run the code to evaluate the ordered logit model:
 ord_model.summary()
 
 # Interpretation:
@@ -266,7 +266,7 @@ mn_model = smf.mnlogit(
     data=df_mn,
 ).fit(disp=False)
 
-# In the REPL, evaluate the multinomial model:
+# Run the code to evaluate the multinomial model:
 mn_model.summary()
 
 

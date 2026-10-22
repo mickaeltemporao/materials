@@ -53,7 +53,7 @@ three = "3"
 # ------------------------------------------------------------------------------
 # Tasks:
 #   1. Use type() to check the type of a, c, party_1, and description.
-#   2. What happens if you add seven + three? Try it in the REPL!
+#   2. What happens if you add seven + three? Run the code to find out!
 #   3. Document your observations with a comment below.
 
 ...

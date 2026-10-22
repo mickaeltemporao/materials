@@ -5,7 +5,7 @@
 
 Learning Objectives:
   - Run Python code interactively in VS Code using Smart Send (Shift+Enter)
-  - Understand how the Python REPL evaluates expressions
+  - Understand how Python executes expressions interactively
   - Document code using comments (#)
   - Use Python as a calculator for arithmetic operations
   - Create and name objects (variable assignments)
@@ -26,13 +26,13 @@ Learning Objectives:
 
 
 # ==============================================================================
-# Running Python in VS Code (Smart Send to REPL)
+# Running Python in VS Code (Interactive Execution)
 # ==============================================================================
 # If you have used R or RStudio before, this workflow will feel very familiar:
 #   - In RStudio: you press Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
 #     to send code from your .R script directly to the R Console.
 #   - In VS Code: you press Shift+Enter on any line or highlighted block
-#     to send it directly to the interactive Python REPL terminal below!
+#     to run it directly in the interactive terminal below!
 #
 # Try it now: place your cursor on the line below and press Shift+Enter!
 print("Greetings!")
@@ -53,7 +53,7 @@ print("I'm excited to learn Python!")
 # Tasks:
 #   1. Print "Hello!"
 #   2. Print your first and last name.
-# (Write your code below and send each line to the REPL with Shift+Enter)
+# (Write your code below and run each line with Shift+Enter)
 
 ...
 
@@ -125,8 +125,8 @@ print(5 + 7)
 turnout_1 = 55.7
 
 # Notice: when you assign a value, Python saves it in memory silently.
-# In the REPL, you do NOT always need print() to inspect an object!
-# Simply send the variable name itself to the REPL to evaluate and display it:
+# When running interactively, you do NOT always need print() to inspect it!
+# Simply run the variable name itself to display its value:
 turnout_1
 
 # Let's create more objects storing real-world electoral data from the
@@ -160,7 +160,8 @@ print(winner_2, turnout_2)
 # Hack-Time: Spot the Error!
 # ------------------------------------------------------------------------------
 # Task:
-#   1. Uncomment the line below (remove the leading #) and send it to the REPL.
+#   1. Uncomment the line below (remove the leading #) and run it
+#      with Shift+Enter.
 #   2. Read the error message carefully: what type of error did Python raise?
 #   3. Fix the capitalization error and run it again.
 
@@ -174,7 +175,7 @@ print(winner_2, turnout_2)
 # You can combine stored variables with arithmetic operations to answer
 # substantive political science questions.
 #
-# In the interactive REPL, evaluating expressions will display their values:
+# When you run expressions interactively, Python displays their values:
 
 sum_val = 3 + 14
 sum_val

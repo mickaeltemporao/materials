@@ -155,7 +155,7 @@ def plot_coefficients(model, title="Model Coefficients (95% CI)"):
     plt.tight_layout()
     plt.show()
 
-# In the REPL, test our reusable function:
+# Run the code to test our reusable function:
 plot_coefficients(full_model, "Predictors of Affective Polarization")
 
 
@@ -249,7 +249,7 @@ scatter_chart = (
     .properties(width=500, height=350)
 )
 
-# In the REPL or interactive window, evaluate the chart:
+# Run the code to display the chart:
 scatter_chart
 
 
@@ -391,7 +391,7 @@ polished_figure
 # In Altair, specifying an incompatible data type raises a SchemaValidationError
 # because text strings cannot be mapped to a continuous numerical scale.
 #
-# 1. Uncomment the chart below and evaluate it in the REPL.
+# 1. Uncomment the chart below and run it with Shift+Enter.
 # 2. Inspect the error message: what schema validation failed?
 # 3. Fix the data type to type="nominal" and re-run.
 # broken_chart = (

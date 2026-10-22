@@ -44,7 +44,7 @@ Learning Objectives:
 # ==============================================================================
 # The help() Function & Parameter Inspection
 # ==============================================================================
-# Python includes an interactive documentation system built into the REPL.
+# Python includes an interactive documentation system.
 # Pass any function, module, or object to help() to read its documentation:
 
 help(len)
@@ -233,7 +233,7 @@ import pandas as pd
 data_url = "https://raw.githubusercontent.com/datamisc/ts-2020/main/data.csv"
 df = pd.read_csv(data_url, compression="gzip")
 
-# In the REPL, simply send df.head() to inspect the first 5 rows:
+# Run df.head() to inspect the first 5 rows:
 df.head()
 
 
@@ -246,7 +246,7 @@ df.head()
 #       2 = Donald Trump (Republican)
 #
 # Tasks:
-#   1. Send df["V201033"].value_counts() to the REPL to inspect frequencies.
+#   1. Run df["V201033"].value_counts() to inspect frequencies.
 #   2. Add normalize=True inside value_counts() to see proportions instead!
 
 ...

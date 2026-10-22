@@ -112,7 +112,7 @@ df["party"] = df["party_id"].map({
     3: "Independent",
 })
 
-# In the REPL, check cleaned sample size and variables:
+# Run the code to check cleaned sample size and variables:
 df.shape
 df.head()
 
@@ -125,7 +125,7 @@ df.head()
 formula_m1 = "affective_polarization ~ political_knowledge"
 model_1 = smf.ols(formula=formula_m1, data=df).fit()
 
-# In the REPL, evaluate the baseline model:
+# Run the code to evaluate the baseline model:
 model_1.summary()
 
 
@@ -133,7 +133,7 @@ model_1.summary()
 # Hack-Time: Evaluating the Baseline Relationship
 # ------------------------------------------------------------------------------
 # Tasks:
-#   1. In the REPL, inspect model_1.params["political_knowledge"].
+#   1. Run model_1.params["political_knowledge"] to inspect the slope.
 #   2. Is the relationship positive or negative?
 #   3. Does this initial bivariate evidence support H1 or H0?
 
@@ -152,7 +152,7 @@ formula_m2 = (
 )
 model_2 = smf.ols(formula=formula_m2, data=df).fit()
 
-# In the REPL, evaluate model 2:
+# Run the code to evaluate model 2:
 model_2.summary()
 
 
@@ -181,7 +181,7 @@ model_2.summary()
 # In survey data, party_id is coded as 1=Democrat, 2=Republican, 3=Independent.
 # What happens if you include party_id as a continuous number without C()?
 #
-# 1. Uncomment the model below and run it in the REPL with Shift+Enter.
+# 1. Uncomment the model below and run it with Shift+Enter.
 # 2. Inspect the coefficient: what does a single slope for party_id assume?
 # 3. Why is treating unordered parties as a continuous slope flawed?
 # naive_model = smf.ols("affective_polarization ~ party_id", data=df).fit()
@@ -199,7 +199,7 @@ formula_m3 = (
 )
 model_3 = smf.ols(formula=formula_m3, data=df).fit()
 
-# In the REPL, evaluate the full model:
+# Run the code to evaluate the full model:
 model_3.summary()
 
 
@@ -224,7 +224,7 @@ comparison_table = summary_col(
     },
 )
 
-# In the REPL, evaluate the comparison table:
+# Run the code to view the comparison table:
 print(comparison_table)
 
 

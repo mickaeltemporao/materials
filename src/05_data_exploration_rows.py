@@ -56,7 +56,7 @@ my_vars = [
 df = anes_data[my_vars].copy()
 df.columns = ["vote", "vote_int", "age", "ideology"]
 
-# In the REPL, inspect the initial shape and distributions:
+# Run the code to inspect the initial shape and distributions:
 df.shape
 df.head()
 
@@ -82,7 +82,7 @@ df["ideology"].value_counts().sort_index()
 
 mask_age = df["age"] >= 18
 
-# In the REPL, evaluate mask_age to verify that it is a boolean Series:
+# Run mask_age.head() to verify that it is a boolean Series:
 mask_age.head()
 
 # Count how many respondents are valid (True) vs invalid (False):
@@ -136,7 +136,7 @@ alt.Chart(df_ideo).mark_bar().encode(x="ideology", y="count")
 # ------------------------------------------------------------------------------
 # Intentional Error Challenge: Combining Boolean Conditions
 # ------------------------------------------------------------------------------
-# 1. Uncomment the line below and send it to the REPL with Shift+Enter.
+# 1. Uncomment the line below and run it with Shift+Enter.
 # 2. Read the error message: what error did Python raise?
 # 3. Fix the error and run it again.
 # mask_error = df["ideology"] >= 1 and df["ideology"] <= 7
@@ -151,7 +151,7 @@ alt.Chart(df_ideo).mark_bar().encode(x="ideology", y="count")
 #   - 'vote_int' records presidential vote choice (1=Biden, 2=Trump, etc.).
 #
 # Tasks:
-#   1. In the REPL, inspect df["vote"].value_counts().sort_index().
+#   1. Run df["vote"].value_counts().sort_index() to inspect values.
 #   2. Create a boolean mask keeping only valid responses for 'vote' (1 or 2).
 #   3. Create a boolean mask keeping only valid candidate selections for
 #      'vote_int' (positive values >= 1).
@@ -171,7 +171,7 @@ alt.Chart(df_ideo).mark_bar().encode(x="ideology", y="count")
 
 mask_youth = df["age"] <= 30
 
-# In the REPL, evaluate the mean ideology for both cohorts:
+# Run the code to evaluate the mean ideology for both cohorts:
 # (1 = Extremely Liberal, 4 = Moderate, 7 = Extremely Conservative)
 df[mask_youth]["ideology"].mean()
 df[~mask_youth]["ideology"].mean()
@@ -263,8 +263,8 @@ df_sample = df.sample(200, random_state=42)
 df_sample.head()
 
 # Storing a plot in an object:
-# In the REPL workflow, assigning a chart to a variable keeps your workspace
-# organized and allows you to display or export it on demand:
+# Assigning a chart to a variable keeps your workspace organized and allows
+# you to display or export it on demand:
 scatter_plot = (
     alt.Chart(df_sample)
     .mark_circle(size=50)
@@ -274,7 +274,7 @@ scatter_plot = (
     )
 )
 
-# In the REPL, evaluate the object directly to view the visualization:
+# Run the object name directly to display the visualization:
 scatter_plot
 
 # Saving and exporting visualizations:
