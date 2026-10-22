@@ -112,53 +112,15 @@ df[mask_ideo].describe()
 df = df[mask_ideo]
 df.shape
 
-# Re-inspect the cleaned distributions using Altair:
-clean_age_hist = (
-    alt.Chart(df)
-    .mark_bar(color="steelblue")
-    .encode(
-        x=alt.X(
-            "age",
-            type="quantitative",
-            bin=alt.Bin(maxbins=30),
-            title="Respondent Age",
-        ),
-        y=alt.Y(
-            "count()",
-            type="quantitative",
-            title="Number of Respondents",
-        ),
-    )
-    .properties(
-        title="Distribution of Age (Cleaned)",
-        width=450,
-        height=250,
-    )
-)
-clean_age_hist
+# Re-inspect the cleaned distributions:
+# Using the frequency table approach introduced in Lesson 04:
+df_age = df["age"].value_counts().reset_index()
+df_age.head()
+alt.Chart(df_age).mark_bar().encode(x="age", y="count")
 
-clean_ideo_bar = (
-    alt.Chart(df)
-    .mark_bar(color="darkcyan")
-    .encode(
-        x=alt.X(
-            "ideology",
-            type="ordinal",
-            title="Ideological Placement (1=Lib to 7=Con)",
-        ),
-        y=alt.Y(
-            "count()",
-            type="quantitative",
-            title="Number of Respondents",
-        ),
-    )
-    .properties(
-        title="Distribution of Ideology (Cleaned)",
-        width=450,
-        height=250,
-    )
-)
-clean_ideo_bar
+df_ideo = df["ideology"].value_counts().reset_index()
+df_ideo.head()
+alt.Chart(df_ideo).mark_bar().encode(x="ideology", y="count")
 
 
 # ------------------------------------------------------------------------------
@@ -261,9 +223,21 @@ df[~mask_youth]["ideology"].mean()
 # Why does this matter?
 # Your level of measurement determines which statistical visualization and
 # bivariate modeling technique is appropriate:
-#   - Continuous & Continuous -> Scatter plots, Hexbin plots
+#   - Continuous & Continuous -> Scatter plots
 #   - Discrete & Continuous   -> Box plots by group, Grouped distributions
 #   - Discrete & Discrete     -> Cross-tabulations, Stacked bar charts
+#
+# Connecting Stevens' Levels of Measurement to Altair Data Types:
+# In Lesson 04, we let Altair infer column names directly without specifying
+# data types. But declarative visualization is most powerful when you
+# explicitly declare the measurement level using Altair's long-form types:
+#
+#   - type="nominal"      -> Nominal data (unordered categories)
+#   - type="ordinal"      -> Ordinal data (ordered ranking/categories)
+#   - type="quantitative" -> Interval & Ratio data (continuous numbers)
+#
+# Explicitly specifying types ensures Altair chooses the correct axis scale,
+# discrete positioning, and color mapping for your data.
 
 
 # ==============================================================================
@@ -271,113 +245,44 @@ df[~mask_youth]["ideology"].mean()
 # ==============================================================================
 # What is the relationship between respondent Age and Ideology?
 # In theory, both can be treated as continuous / metric variables.
+#
+# With two continuous variables, we use a scatter plot (mark_circle).
+# Because thousands of survey points overlap (overplotting), we can take a
+# random sample of respondents to inspect individual points clearly:
+df_sample = df.sample(200, random_state=42)
+df_sample.head()
 
-# Direct scatter plot (showing overplotting):
-scatter_overplot = (
-    alt.Chart(df)
-    .mark_point()
-    .encode(
-        x=alt.X(
-            "ideology",
-            type="quantitative",
-            title="Ideology (1=Lib to 7=Con)",
-        ),
-        y=alt.Y(
-            "age",
-            type="quantitative",
-            title="Respondent Age",
-        ),
-    )
-    .properties(
-        title="Age vs. Ideology (Overplotting Problem)",
-        width=450,
-        height=300,
-    )
-)
-scatter_overplot
-
-# Notice the "overplotting" issue: thousands of survey points overlap,
-# hiding the density of observations. We can solve this in three ways:
-
-# Solution 1: Random sampling:
-scatter_sample = (
-    alt.Chart(df.sample(200, random_state=42))
+# Storing a plot in an object:
+# In the REPL workflow, assigning a chart to a variable keeps your workspace
+# organized and allows you to display or export it on demand:
+scatter_plot = (
+    alt.Chart(df_sample)
     .mark_circle(size=50)
     .encode(
-        x=alt.X(
-            "ideology",
-            type="quantitative",
-            title="Ideology (1=Lib to 7=Con)",
-        ),
-        y=alt.Y(
-            "age",
-            type="quantitative",
-            title="Respondent Age",
-        ),
-    )
-    .properties(
-        title="Age vs. Ideology (Random Sample of 200 Respondents)",
-        width=450,
-        height=300,
+        x=alt.X("ideology", type="quantitative"),
+        y=alt.Y("age", type="quantitative"),
     )
 )
-scatter_sample
 
-# Solution 2: Alpha transparency (points darken where data clusters):
+# In the REPL, evaluate the object directly to view the visualization:
+scatter_plot
+
+# Saving and exporting visualizations:
+# Altair charts can be saved directly to standalone HTML, PNG, or SVG:
+# scatter_plot.save("scatter_ideology_age.html")
+
+# Overplotting Solution: Alpha Transparency (Opacity)
+# If you prefer to plot the full dataset rather than a sample, setting opacity
+# reveals density clusters where survey responses overlap:
 scatter_opacity = (
     alt.Chart(df)
     .mark_circle(size=30, opacity=0.04)
     .encode(
-        x=alt.X(
-            "ideology",
-            type="quantitative",
-            title="Ideology (1=Lib to 7=Con)",
-        ),
-        y=alt.Y(
-            "age",
-            type="quantitative",
-            title="Respondent Age",
-        ),
-    )
-    .properties(
-        title="Age vs. Ideology (Alpha Opacity = 0.04)",
-        width=450,
-        height=300,
+        x=alt.X("ideology", type="quantitative"),
+        y=alt.Y("age", type="quantitative"),
     )
 )
 scatter_opacity
-
-# Solution 3: 2D binned heatmap (density binning):
-heatmap_density = (
-    alt.Chart(df)
-    .mark_rect()
-    .encode(
-        x=alt.X(
-            "ideology",
-            type="quantitative",
-            bin=alt.Bin(maxbins=7),
-            title="Ideology (1=Lib to 7=Con)",
-        ),
-        y=alt.Y(
-            "age",
-            type="quantitative",
-            bin=alt.Bin(maxbins=15),
-            title="Respondent Age",
-        ),
-        color=alt.Color(
-            "count()",
-            type="quantitative",
-            title="Count",
-            scale=alt.Scale(scheme="blues"),
-        ),
-    )
-    .properties(
-        title="Age vs. Ideology (2D Density Heatmap)",
-        width=450,
-        height=300,
-    )
-)
-heatmap_density
 
 
 # ==============================================================================
@@ -394,25 +299,14 @@ heatmap_density
 #   - Points: Outliers beyond 1.5 * IQR
 
 # Compare age distributions across ideological placement using Altair:
+# Setting ideology to type="ordinal" groups respondents into discrete category
+# positions along the x-axis, while age is treated as type="quantitative":
 box_plot = (
     alt.Chart(df)
     .mark_boxplot(size=25)
     .encode(
-        x=alt.X(
-            "ideology",
-            type="ordinal",
-            title="Ideology (1=Extr Lib to 7=Extr Con)",
-        ),
-        y=alt.Y(
-            "age",
-            type="quantitative",
-            title="Respondent Age",
-        ),
-    )
-    .properties(
-        title="Age Distribution Across Ideological Self-Placement",
-        width=450,
-        height=300,
+        x=alt.X("ideology", type="ordinal"),
+        y=alt.Y("age", type="quantitative"),
     )
 )
 box_plot
@@ -453,36 +347,17 @@ cand_pct = (
 cand_pct.round(1)
 
 # Visualizing cross-tabulations: Normalized stacked bar chart in Altair
+# Here we combine all three core data types in one chart:
+#   - x-axis: ideology (type="ordinal")
+#   - y-axis: share within group (type="quantitative", stack="normalize")
+#   - color: candidate choice (type="nominal")
 stacked_bar = (
     alt.Chart(df_twoparty)
     .mark_bar()
     .encode(
-        x=alt.X(
-            "ideology",
-            type="ordinal",
-            title="Ideology (1=Extr Lib to 7=Extr Con)",
-        ),
-        y=alt.Y(
-            "count()",
-            type="quantitative",
-            stack="normalize",
-            title="Share within Ideological Group",
-            axis=alt.Axis(format="%"),
-        ),
-        color=alt.Color(
-            "candidate",
-            type="nominal",
-            title="Candidate Choice",
-            scale=alt.Scale(
-                domain=["Biden (Dem)", "Trump (Rep)"],
-                range=["#2b5c8f", "#d95f02"],
-            ),
-        ),
-    )
-    .properties(
-        title="2020 Presidential Candidate Choice by Ideology",
-        width=450,
-        height=300,
+        x=alt.X("ideology", type="ordinal"),
+        y=alt.Y("count()", type="quantitative", stack="normalize"),
+        color=alt.Color("candidate", type="nominal"),
     )
 )
 stacked_bar
