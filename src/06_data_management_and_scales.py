@@ -181,6 +181,19 @@ df["age_cohort"] = pd.cut(df["age_clean"], bins=age_bins, labels=age_cohorts)
 # In the REPL, inspect the distribution of age cohorts:
 df["age_cohort"].value_counts().sort_index()
 
+
+# ==============================================================================
+# Customizing Visualizations: Properties, Titles, and Colors
+# ==============================================================================
+# In Lesson 05, we focused on raw marks and data types. Now that our charts
+# are assigned to Python objects, we can begin customizing their presentation:
+#   1. Dimensions & Titles: .properties(title="...", width=..., height=...)
+#      controls the canvas dimensions and main heading.
+#   2. Axis Labels: Passing title="..." inside alt.X() and alt.Y() replaces
+#      raw variable names with readable survey question labels.
+#   3. Colors: Setting color="..." directly inside the mark method applies a
+#      custom aesthetic hue (e.g. "darkcyan", "steelblue").
+
 # Visualize age cohort distribution using Altair:
 cohort_chart = (
     alt.Chart(df.dropna(subset=["age_cohort"]))
