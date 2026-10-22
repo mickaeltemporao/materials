@@ -67,6 +67,18 @@ df.head()
 # In ANES 2020, 'vote_int' records presidential vote intention:
 #   1 = Joe Biden, 2 = Donald Trump, 3 = Jo Jorgensen, 4 = Howie Hawkins
 #   Negative values (-9, -8, -1) represent non-responses and refusals.
+#
+# Concept Diagram: Creating New Columns in pandas
+# https://pandas.pydata.org/docs/_images/05_newcolumn_1.svg
+#
+#   Existing DataFrame                      Transform & Assign
+#   +----------+-------+                    df["candidate"] = ...
+#   +----------+-------+                    +----------+-------+-------------+
+#   | vote_int | age   |  ───────────────>  | vote_int | age   | candidate   |
+#   +----------+-------+                    +----------+-------+-------------+
+# 0 | 1        | 45    |                  0 | 1        | 45    | Joe Biden   |
+# 1 | 2        | 62    |                  1 | 2        | 62    | Donald Trump|
+#   +----------+-------+                    +----------+-------+-------------+
 
 # Strategy 1: Recoding using a boolean mask and .loc
 # To assign strings into a numeric column, create a new object column:

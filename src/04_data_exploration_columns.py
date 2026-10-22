@@ -51,6 +51,20 @@ anes_data = pd.read_csv(data_url, compression="gzip", low_memory=False)
 #   - A DataFrame is a 2-dimensional tabular dataset with rows and columns.
 #   - A Series is a single 1-dimensional column from a DataFrame.
 #
+# Concept Diagram: Series vs DataFrame
+# https://storage.googleapis.com/lds-media/images/
+#   series-and-dataframe.width-1200.png
+#
+#       DataFrame ('my_df')                      Series ('age')
+#       +---------+----------+-------+-------+     +-------+
+#       | vote    | vote_int | age   | ideo  |     | age   |
+#       +---------+----------+-------+-------+     +-------+
+#     0 | 1       | 1        | 45    | 2     |   0 | 45    |
+#     1 | 1       | 2        | 62    | 6     |   1 | 62    |
+#     2 | 2       | -1       | 21    | 4     |   2 | 21    |
+#       +---------+----------+-------+-------+     +-------+
+#       Columns (Variables) ──^                    1D Array
+#
 # Let us construct a small DataFrame from scratch to understand its anatomy:
 
 turnout = [66.8, 55.7, 54.9, 58.2, 56.7, 51.2, 49.0]
@@ -89,6 +103,15 @@ my_data.head()
 # In survey analysis, raw datasets contain hundreds of questions.
 # You need to isolate only the variables relevant to your research hypothesis.
 #
+# Concept Diagram: Selecting Columns
+# https://pandas.pydata.org/docs/_images/03_subset_columns.svg
+#
+#   DataFrame (anes_data)         Select my_vars               my_df
+#   +-----+-----+-----+-----+     ["vote", "age", ...]         +-----+-----+
+#   | V1  | V2  | V3  | ... |  ─────────────────────────>      |vote | age |
+#   +-----+-----+-----+-----+                                  +-----+-----+
+#   | ... | ... | ... | ... |                                  | ... | ... |
+#
 # 1. Selecting a single column returns a Series:
 #    df["column_name"]
 
@@ -122,29 +145,33 @@ my_df.head()
 
 
 # ==============================================================================
-# Univariate Summary Statistics
+# Answering Political Science Questions with Summary Statistics
 # ==============================================================================
+# In empirical political research, summary statistics answer foundational
+# descriptive questions before jumping into complex causal models.
+#
 # pandas Series provide built-in methods to summarize variables:
 #   .mean(), .std(), .min(), .max(), .count(), .describe(), .value_counts()
-
-# Frequencies of vote intention:
+#
+# Question: How many people in the sample intend to vote?
+# In ANES 2020: 1 = Intend to vote, 2 = Do not intend to vote.
 my_df["vote"].value_counts()
 
-# Proportions (relative frequencies):
-my_df["vote"].value_counts(normalize=True)
-
-# Percentages rounded to nearest whole number:
+# Question: What percentage of respondents intend to vote?
 vote_pct = my_df["vote"].value_counts(normalize=True) * 100
-vote_pct.round()
+vote_pct.round(1)
 
 
 # ------------------------------------------------------------------------------
-# Hack-Time: Exploring Age and Ideology
+# Hack-Time: What is the Average Age and Ideology of the Electorate?
 # ------------------------------------------------------------------------------
 # Tasks:
-#   1. Calculate the mean age of respondents in my_df.
-#   2. Use .describe() on my_df["age"] to view all summary statistics.
-#   3. Use .describe() on my_df["ideology"] to inspect the ideology scale.
+#   1. What is the average age of respondents in the ANES dataset?
+#      Calculate my_df["age"].mean() in the REPL.
+#   2. Use .describe() on my_df["age"] to view all summary statistics
+#      (mean, standard deviation, quartiles, min, max).
+#   3. What is the average ideology of respondents?
+#      Use .describe() on my_df["ideology"] to inspect the scale.
 
 ...
 
@@ -152,21 +179,31 @@ vote_pct.round()
 # ==============================================================================
 # First Visualizations with Altair
 # ==============================================================================
-# In empirical research, looking at tables of numbers can be dry and slow.
-# Visualizing your variables makes patterns and distributions immediately clear.
+# In empirical research, looking at summary numbers alone can deceive you.
+# Datasets with identical means and standard deviations can have completely
+# different real-world distributions!
 #
-# In Python, we use Altair for data visualization. Altair follows a simple
-# three-step logic:
-#   1. Chart: The data table (a pandas DataFrame).
-#   2. Mark: The visual shape to draw (e.g. .mark_bar()).
-#   3. Encode: Which column goes to the x-axis and which goes to the y-axis.
+# Concept: Same stats, different graphs (Datasaurus Dozen animation):
+# https://damassets.autodesk.net/content/dam/autodesk/
+#   research/publications-assets/gifs/
+#   same-stats-different-graphs/DinoSequentialSmaller.gif
+#
+# In Python, we use Altair for statistical visualization. Altair follows a
+# simple three-step declarative workflow:
+#
+#       Data Table        ──>       Mark        ──>       Encode
+#    (pandas DataFrame)        (Geometric Shape)     (x and y Channels)
+#      alt.Chart(df)      ──>    .mark_bar()    ──>  .encode(x=..., y=...)
 #
 # Core workflow:
-#   First, prepare the summary table using pandas.
+#   First, prepare the summary table using pandas
+#   (.value_counts().reset_index()).
 #   Second, inspect the table with .head() to verify column names.
 #   Third, create the plot in two lines of Altair code!
 
-# Example 1: Distribution of respondent age
+# ------------------------------------------------------------------------------
+# Question: What is the Age Distribution of the Electorate?
+# ------------------------------------------------------------------------------
 # Step 1: Use pandas to create a frequency table across all observations:
 df_age = my_df["age"].value_counts().reset_index()
 
@@ -177,7 +214,9 @@ df_age.head()
 alt.Chart(df_age).mark_bar().encode(x="age", y="count")
 
 
-# Example 2: Voter turnout intentions
+# ------------------------------------------------------------------------------
+# Question: How Many Citizens Intend to Vote?
+# ------------------------------------------------------------------------------
 # Step 1: Compute frequencies across all observations:
 df_vote = my_df["vote"].value_counts().reset_index()
 
@@ -189,33 +228,47 @@ alt.Chart(df_vote).mark_bar().encode(x="vote", y="count")
 
 
 # ------------------------------------------------------------------------------
-# Hack-Time: Visualizing Ideology Frequencies
+# Hack-Time: Are US Citizens Polarized?
 # ------------------------------------------------------------------------------
-# In ANES 2020, ideology is measured on a 1-7 scale:
-#   1 = Extremely Liberal, 4 = Moderate, 7 = Extremely Conservative
-#   (Negative values represent non-responses)
+# Political scientists debate whether the American public is polarized into
+# ideological extremes (liberals vs. conservatives) or clustered in the middle.
+#
+# The ANES measures ideological self-placement on a 7-point scale:
+#
+#      1        2         3         4         5         6         7
+#   [---|--------|---------|---------|---------|---------|---------|---]
+#     Extr.     Lib.     Slight.  Moderate   Slight.   Cons.     Extr.
+#     Lib.               Lib.                Cons.               Cons.
+#   (Negative values represent survey non-responses)
 #
 # Tasks:
 #   1. Compute frequencies across all observations of my_df["ideology"]
 #      using .value_counts().reset_index() and save it as df_ideo.
 #   2. Inspect df_ideo.head() in the REPL.
-#   3. Use alt.Chart(df_ideo).mark_bar().encode(...) to visualize it.
+#   3. Visualize the distribution with:
+#      alt.Chart(df_ideo).mark_bar().encode(x="ideology", y="count")
+#   4. Look at the chart: do respondents cluster around 4 (moderate) or do
+#      they concentrate at the extreme ends (1 and 7)?
 
 ...
 
 
 # ==============================================================================
-# Labeling Categories Before Plotting
+# Question: Who Would Win the Popular Vote According to the ANES?
 # ==============================================================================
-# Unlabeled numeric codes (like 1, 2, 3) make charts difficult to interpret.
-# By replacing numeric codes with candidate names in pandas first, Altair
-# automatically uses those clear labels on the chart axes:
+# In ANES 2020, 'vote_int' records which presidential candidate respondents
+# intended to vote for:
+#   1 = Joe Biden, 2 = Donald Trump, 3 = Jo Jorgensen, 4 = Howie Hawkins
+#
+# Unlabeled numeric codes make charts difficult to interpret. By replacing
+# numeric codes with candidate names in pandas first, Altair automatically
+# uses those clear names on the chart axes:
 
 candidate_names = {
-    1: "Joe Biden",
-    2: "Donald Trump",
-    3: "Jo Jorgensen",
-    4: "Howie Hawkins",
+    1: "Joe Biden (Dem)",
+    2: "Donald Trump (Rep)",
+    3: "Jo Jorgensen (Lib)",
+    4: "Howie Hawkins (Grn)",
 }
 
 df_cand = (
@@ -229,5 +282,8 @@ df_cand.columns = ["candidate", "votes"]
 # Inspect the prepared table:
 df_cand.head()
 
-# Plot horizontal bars by putting categories on y and counts on x:
+# Plot horizontal bars by putting candidate on y and vote counts on x:
 alt.Chart(df_cand).mark_bar().encode(x="votes", y="candidate")
+
+# Anatomy of a Figure Reference:
+# https://matplotlib.org/3.1.1/_images/anatomy.png

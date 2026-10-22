@@ -20,6 +20,16 @@ Learning Objectives:
 # In empirical research, datasets are rarely clean out of the box.
 # Survey files frequently contain irrelevant cases, non-responses, or refusals.
 #
+# Concept Diagram: Selecting Rows
+# https://pandas.pydata.org/docs/_images/03_subset_rows.svg
+#
+#   Raw Data (df)            Boolean Mask              Filtered df
+#   +----+----+-------+      +-------+                 +----+----+-------+
+# 0 | 45 | 1  | Biden |    0 | True  |  ───────────> 0 | 45 | 1  | Biden |
+# 1 | 16 | -1 | None  |    1 | False |                 +----+----+-------+
+# 2 | 21 | 2  | Trump |    2 | True  |  ───────────> 2 | 21 | 2  | Trump |
+#   +----+----+-------+      +-------+                 +----+----+-------+
+#
 # To test hypotheses accurately, you need to filter rows (observations):
 #   - Isolating a subgroup of theoretical interest (e.g. young voters).
 #   - Removing non-response codes (e.g. -9 "Refused", -8 "Don't know").
