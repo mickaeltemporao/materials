@@ -9,8 +9,9 @@ Learning Objectives:
   - Visualize segmented distributions using grouped kernel density estimation
   - Master declarative graphics in Python using Altair's grammar of graphics
   - Map variables to visual channels using Altair long-form data types
-  - Build interactive charts with linked selections, tooltips, and brushing
-  - Prepare publication-ready graphics for Typst papers and presentations
+  - Construct faceted small-multiple charts to unpack subgroup differences
+  - Apply publication-ready typography, labels, custom palettes, and themes
+  - Export high-resolution figures for integration into Typst documents
 ==============================================================================
 """
 
@@ -28,7 +29,8 @@ Learning Objectives:
 # This script covers three professional visualization workflows:
 #   1. Functionalizing Matplotlib/Seaborn for reproducible coefficient plots.
 #   2. Grouped kernel density estimation to inspect distribution shapes.
-#   3. Modern declarative graphics with Altair for interactive dashboards.
+#   3. Publication-ready declarative graphics with Altair: faceting, polishing,
+#      and Typst export.
 
 import numpy as np
 import pandas as pd
@@ -252,56 +254,135 @@ scatter_chart
 
 
 # ==============================================================================
-# Interactive Dashboards: Linked Brushing in Altair
+# Faceted Visualizations: Edward Tufte's Small Multiples
 # ==============================================================================
-# Altair makes it straightforward to link multiple views through selections.
-# An interval selection ("brush") allows users to highlight a subset of points
-# in one plot and watch other plots update in real time:
+# In political science, we often want to compare how an empirical relationship
+# behaves across distinct subgroups (e.g. across parties or cohorts).
+#
+# Overlaying multiple groups onto a single chart frequently produces visual
+# clutter. The small multiples technique (Tufte 1983) solves this by splitting
+# data into a grid of identical, aligned sub-charts using the same scale.
+#
+# In Altair, faceting is implemented via column=alt.Column(...) or .facet():
 
-# Step 1: Create an interval selection over the scatter plot:
-brush = alt.selection_interval()
-
-# Step 2: Scatter plot that highlights points within the brush:
-interactive_scatter = (
+faceted_polarization = (
     alt.Chart(sample_df)
-    .mark_circle(size=50)
+    .mark_circle(size=50, opacity=0.6)
     .encode(
-        x=alt.X("age", type="quantitative", title="Age"),
+        x=alt.X(
+            "age",
+            type="quantitative",
+            title="Respondent Age",
+        ),
         y=alt.Y(
             "affective_polarization",
             type="quantitative",
             title="Affective Polarization",
         ),
-        color=alt.condition(
-            brush,
-            alt.Color("party", type="nominal", legend=None),
-            alt.value("lightgray"),
+        color=alt.Color(
+            "party",
+            type="nominal",
+            scale=alt.Scale(
+                domain=["Democrat", "Republican", "Independent"],
+                range=["#2b5c8f", "#d95f02", "#7570b3"],
+            ),
+            legend=None,
+        ),
+        column=alt.Column(
+            "party",
+            type="nominal",
+            title="Party Identification",
         ),
     )
-    .properties(width=350, height=300)
-    .add_params(brush)
+    .properties(width=220, height=220)
 )
 
-# Step 3: Bar chart showing counts of brushed respondents by interest:
-brushed_bars = (
-    alt.Chart(sample_df)
-    .mark_bar()
-    .encode(
-        y=alt.Y("interest_label", type="nominal", title="Political Interest"),
-        x=alt.X(
-            "count()",
-            type="quantitative",
-            title="Number of Respondents",
+faceted_polarization
+
+
+# ==============================================================================
+# Publication-Ready Finishes: Typography, Reference Lines, and Themes
+# ==============================================================================
+# Exploratory graphics are quick and rough; publication figures require
+# meticulous attention to visual hierarchy, typography, and clean framing:
+#
+# 1. Title and Subtitle: Use alt.TitleParams() to formulate a clear finding
+#    in the title and cite data sources in the subtitle.
+# 2. Reference Lines: Use alt.Chart().mark_rule() to anchor substantive
+#    benchmarks (e.g. the sample mean or a neutral score).
+# 3. Canvas Configuration: Use .configure_*() methods to remove default chart
+#    borders, adjust font sizes, and mute distracting gridlines.
+
+# Calculate the sample mean of affective polarization:
+mean_polarization = df["affective_polarization"].mean()
+
+# Reference line indicating overall sample mean:
+polarization_mean_rule = (
+    alt.Chart(pd.DataFrame({"mean_val": [mean_polarization]}))
+    .mark_rule(color="#555555", strokeDash=[4, 4], strokeWidth=1.5)
+    .encode(y=alt.Y("mean_val", type="quantitative"))
+)
+
+# Polished composite visualization:
+polished_figure = (
+    (scatter_chart + polarization_mean_rule)
+    .properties(
+        title=alt.TitleParams(
+            text="Affective Polarization Across Respondent Age",
+            subtitle=[
+                f"Dashed line = sample mean ({mean_polarization:.1f})",
+                "Source: American National Election Studies (ANES 2020)",
+            ],
+            anchor="start",
+            fontSize=15,
+            subtitleFontSize=11,
+            subtitleColor="#666666",
         ),
-        color=alt.Color("party", type="nominal"),
+        width=520,
+        height=320,
     )
-    .transform_filter(brush)
-    .properties(width=250, height=300)
+    .configure_axis(
+        labelFontSize=11,
+        titleFontSize=12,
+        gridColor="#f0f0f0",
+    )
+    .configure_legend(
+        titleFontSize=11,
+        labelFontSize=10,
+        orient="bottom",
+    )
+    .configure_view(stroke=None)
 )
 
-# Combine the two charts side by side using the '|' operator:
-dashboard = interactive_scatter | brushed_bars
-dashboard
+polished_figure
+
+
+# ==============================================================================
+# Exporting Figures for Typst Papers and Presentations
+# ==============================================================================
+# When writing articles, theses, or policy memos in Typst or LaTeX, you need
+# to export your figures to standalone image files.
+#
+# Altair supports vector (SVG/PDF) and raster (PNG) exports via .save():
+#
+#   - PNG (raster): High compatibility, set scale_factor=2.0 for 300 DPI print.
+#   - SVG (vector): Infinite resolution, ideal for publication layouts.
+#
+# To save to disk, uncomment the lines below:
+# polished_figure.save("figures/polarization_by_party.png", scale_factor=2.0)
+# polished_figure.save("figures/polarization_by_party.svg")
+#
+# Embedding your exported figure in a Typst document:
+# ------------------------------------------------------------------------------
+# In your Typst paper (`paper.typ`), insert the figure using:
+#
+#   #figure(
+#     image("figures/polarization_by_party.png", width: 85%),
+#     caption: [Affective Polarization by Age and Party Identification.],
+#   ) <fig-polarization>
+#
+# You can then reference it in your text using:
+#   "As shown in @fig-polarization, affective hostility is elevated..."
 
 
 # ------------------------------------------------------------------------------
@@ -337,15 +418,17 @@ dashboard
 
 
 # ------------------------------------------------------------------------------
-# Hack-Time: Building an Interactive Exploration of Ideology
+# Hack-Time: Building a Publication-Ready Faceted Visualization
 # ------------------------------------------------------------------------------
 # Tasks:
-#   1. Using sample_df, build an Altair box plot or strip plot comparing
-#      'feeling_democrat' (type="quantitative") across levels of
-#      'ideology' (type="ordinal").
-#   2. Add an interactive dropdown binding allowing the user to filter
-#      the chart by 'party' (type="nominal").
-#   3. What pattern do you observe in how partisans evaluate Democrats as
-#      their ideological self-placement becomes more conservative?
+#   1. Using sample_df, build a faceted Altair chart comparing feelings
+#      toward Democrats ('feeling_democrat', type="quantitative") across
+#      levels of 'ideology' (type="ordinal"), faceted by 'party'
+#      (type="nominal").
+#   2. Apply publication-ready typography using alt.TitleParams() with a
+#      substantive finding title, subtitle, and data source.
+#   3. Polish the layout using .configure_axis() and
+#      .configure_view(stroke=None).
+#   4. Add a commented-out .save() command exporting your figure to PNG.
 
 ...
