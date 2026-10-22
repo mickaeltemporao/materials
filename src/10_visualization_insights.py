@@ -4,14 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Translate regression results into intuitive, communicative visual narratives
-  - Construct reusable functions to generate dot-and-whisker coefficient plots
-  - Visualize segmented distributions using grouped kernel density estimation
-  - Master declarative graphics in Python using Altair's grammar of graphics
-  - Map variables to visual channels using Altair long-form data types
-  - Construct faceted small-multiple charts to unpack subgroup differences
-  - Apply publication-ready typography, labels, custom palettes, and themes
-  - Export high-resolution figures for integration into Typst documents
+  - Functionalize reproducible regression coefficient plots
+  - Construct faceted small-multiple charts to compare subgroups
+  - Apply publication-ready typography, reference lines, and themes
+  - Export figures for integration into Typst documents
 ==============================================================================
 """
 

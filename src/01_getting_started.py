@@ -4,12 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Run Python code interactively in VS Code using Smart Send (Shift+Enter)
-  - Understand how Python executes expressions interactively
-  - Document code using comments (#)
-  - Use Python as a calculator for arithmetic operations
-  - Create and name objects (variable assignments)
-  - Combine variables with arithmetic to answer substantive political questions
+  - Run Python code interactively using Shift+Enter
+  - Use Python as a calculator for basic arithmetic and variables
+  - Create and name objects to store data in memory
+  - Combine variables with arithmetic to calculate election turnout
 ==============================================================================
 """
 

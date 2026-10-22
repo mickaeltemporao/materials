@@ -4,14 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Understand the logic of statistical control and confounding variables
-  - Specify multiple regression models using statsmodels formula syntax
-  - Incorporate categorical predictors and reference levels using C()
-  - Estimate nested models: Baseline -> Demographics -> Political Controls
-  - Compare model performance using summary_col, R², and adjusted R²
-  - Export publication-ready regression tables to Typst using mmisc.typst
-  - Visualize regression results using Altair dot-and-whisker coefficient plots
-  - Interpret substantive effects and confidence intervals in political research
+  - Understand statistical control and confounding variables
+  - Estimate multiple regression models with categorical predictors using C()
+  - Compare nested models side by side with summary_col
+  - Build dot-and-whisker coefficient plots in Altair and export to Typst
 ==============================================================================
 """
 

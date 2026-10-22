@@ -4,14 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Understand why OLS is unsuitable for qualitative dependent variables
-  - Estimate binary logistic regression models using statsmodels.formula.api
-  - Transform log-odds coefficients into intuitive Odds Ratios (OR = exp(beta))
-  - Calculate and plot predicted probabilities (the S-curve) in Altair
-  - Estimate Ordered Logistic Regression using statsmodels OrderedModel
-  - Interpret threshold cutpoints and the proportional odds assumption
-  - Estimate Multinomial Logit models using smf.mnlogit for multi-party vote
-  - Compare substantive model predictions across political science applications
+  - Understand why linear regression is unsuitable for binary outcomes
+  - Estimate logistic regression and interpret Odds Ratios
+  - Calculate and plot predicted probability S-curves in Altair
+  - Model ordered and multi-category outcomes with Ordered and Multinomial Logit
 ==============================================================================
 """
 

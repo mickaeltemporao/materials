@@ -4,13 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Subset observations (filter rows) using relational operators
-  - Combine multiple filtering conditions using boolean logic (&, |, ~)
-  - Filter missing survey codes using .between() and .isin()
-  - Distinguish types of data and levels of measurement in political science
-  - Visualize continuous and discrete bivariate relationships with Altair
-  - Compute cross-tabulations and build Altair stacked bar charts
-  - Apply row filtering to analyze youth political behavior in the ANES
+  - Filter rows and clean missing survey codes using boolean masks
+  - Map Stevens' levels of measurement to Altair data types
+  - Visualize bivariate relationships with scatter and box plots
+  - Compute cross-tabulations and build stacked bar charts
 ==============================================================================
 """
 

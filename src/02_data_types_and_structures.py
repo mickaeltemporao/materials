@@ -4,12 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Understand core primitive data types: int, float, str, bool, None
-  - Use type() to inspect object types
-  - Apply relational (comparison) operators to evaluate conditions
-  - Combine conditions using logical operators: and, or, not
-  - Create, index, slice, edit, and extend Python lists
-  - Model structured survey respondents using nested lists
+  - Distinguish core data types (int, float, str, bool, None) using type()
+  - Evaluate conditions using relational and logical operators
+  - Create, index, and slice Python lists
+  - Structure survey respondents using nested lists
 ==============================================================================
 """
 

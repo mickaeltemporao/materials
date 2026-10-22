@@ -4,14 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Understand what a statistical model is and its purpose in social science
-  - Conceptualize the sample mean as the simplest baseline predictive model
-  - Formalize residuals (prediction errors) and the Sum of Squared Errors (SSE)
-  - Move from a constant model to a linear model with an explanatory variable
-  - Understand the geometry of Ordinary Least Squares (OLS) vs. random lines
-  - Estimate bivariate regression models in Python with statsmodels.formula.api
-  - Interpret key regression quantities: intercept, slope, p-value, and R²
-  - Visualize fitted regression lines, observed data, and residuals in Altair
+  - Conceptualize models as simplifications, starting with the mean
+  - Understand OLS geometry, residuals, and Sum of Squared Errors
+  - Estimate and interpret bivariate regression models with statsmodels
+  - Layer regression lines and residual drop-lines in Altair
 ==============================================================================
 """
 

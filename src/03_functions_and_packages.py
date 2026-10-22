@@ -4,13 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Understand functions and how they eliminate repetitive code
-  - Use the built-in help() function and inspect function parameters
-  - Distinguish between general functions and object-specific methods
-  - Chain methods together to clean and process text
-  - Define custom functions using def, docstrings, parameters, and return
-  - Import standard and third-party modules (math, random, pandas)
-  - Load real-world survey data from the ANES 2020 using pandas
+  - Call built-in functions and inspect arguments using help()
+  - Distinguish general functions from object-specific methods
+  - Define custom reusable functions using def and return
+  - Import packages and load ANES survey data with pandas
 ==============================================================================
 """
 

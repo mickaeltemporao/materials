@@ -4,15 +4,10 @@
 ==============================================================================
 
 Learning Objectives:
-  - Recode survey variables using boolean masks and .replace() dictionaries
-  - Understand the methodological tradeoff between row filtering and recoding
-  - Create, modify, and drop DataFrame columns without modifying raw inputs
-  - Discretize continuous variables into demographic bins using pd.cut()
-  - Understand the theoretical rationale for composite scales in social science
-  - Construct an Additive Political Trust Index and reverse-code survey items
-  - Build an Objective Political Knowledge Index from institutional questions
-  - Construct an Affective Polarization Index from feeling thermometers
-  - Validate scale reliability, distributions, and item correlations
+  - Recode survey variables using masks and dictionaries
+  - Discretize continuous variables into demographic cohorts with pd.cut()
+  - Construct composite scales and indices (Trust, Knowledge, Polarization)
+  - Customize Altair charts with dimensions, titles, and colors
 ==============================================================================
 """
 

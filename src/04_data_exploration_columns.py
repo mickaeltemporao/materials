@@ -4,19 +4,15 @@
 ==============================================================================
 
 Learning Objectives:
-  - Understand the political data science pipeline
   - Distinguish between pandas Series and DataFrames
-  - Select single and multiple columns from survey datasets
-  - Rename columns to create transparent, self-documenting data
-  - Calculate univariate summary statistics: mean, standard deviation, describe
-  - Compute frequency and percentage distributions using value_counts()
-  - Master declarative graphics using Altair's grammar of graphics
-  - Visualize continuous and discrete distributions (histograms, bar charts)
+  - Select and rename columns in survey datasets
+  - Calculate summary statistics and frequency distributions
+  - Create basic bar charts using Altair
 ==============================================================================
 """
 
 # ==============================================================================
-# The Political Data Science Pipeline
+# The Data Science Pipeline
 # ==============================================================================
 # Empirical research typically progresses through four stages:
 #   1. Acquisition: Loading raw survey data, electoral records, or text.
