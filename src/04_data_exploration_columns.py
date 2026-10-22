@@ -167,8 +167,8 @@ vote_pct.round()
 #   Third, create the plot in two lines of Altair code!
 
 # Example 1: Distribution of respondent age
-# Step 1: Use pandas to create a frequency table:
-df_age = my_df[my_df["age"] >= 18]["age"].value_counts().reset_index()
+# Step 1: Use pandas to create a frequency table across all observations:
+df_age = my_df["age"].value_counts().reset_index()
 
 # Always inspect the DataFrame before plotting:
 df_age.head()
@@ -178,12 +178,8 @@ alt.Chart(df_age).mark_bar().encode(x="age", y="count")
 
 
 # Example 2: Voter turnout intentions
-# Step 1: Filter and compute frequencies with pandas:
-df_vote = (
-    my_df[my_df["vote"].isin([1, 2])]["vote"]
-    .value_counts()
-    .reset_index()
-)
+# Step 1: Compute frequencies across all observations:
+df_vote = my_df["vote"].value_counts().reset_index()
 
 # Inspect the table:
 df_vote.head()
@@ -200,10 +196,12 @@ alt.Chart(df_vote).mark_bar().encode(x="vote", y="count")
 #   (Negative values represent non-responses)
 #
 # Tasks:
-#   1. Filter my_df for valid ideology scores between 1 and 7.
-#   2. Compute frequencies with .value_counts().reset_index() as df_ideo.
-#   3. Inspect df_ideo.head() in the REPL.
-#   4. Use alt.Chart(df_ideo).mark_bar().encode(...) to visualize it.
+#   1. Compute frequencies across all observations of my_df["ideology"]
+#      using .value_counts().reset_index() and save it as df_ideo.
+#   2. Inspect df_ideo.head() in the REPL.
+#   3. Use alt.Chart(df_ideo).mark_bar().encode(...) to visualize it.
+
+...
 
 
 # ==============================================================================
@@ -213,7 +211,6 @@ alt.Chart(df_vote).mark_bar().encode(x="vote", y="count")
 # By replacing numeric codes with candidate names in pandas first, Altair
 # automatically uses those clear labels on the chart axes:
 
-mask_cand = my_df["vote_int"].between(1, 4)
 candidate_names = {
     1: "Joe Biden",
     2: "Donald Trump",
@@ -222,7 +219,7 @@ candidate_names = {
 }
 
 df_cand = (
-    my_df.loc[mask_cand, "vote_int"]
+    my_df["vote_int"]
     .replace(candidate_names)
     .value_counts()
     .reset_index()
