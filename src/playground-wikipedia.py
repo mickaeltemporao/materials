@@ -114,10 +114,3 @@ sentiment_chart = (
     )
 )
 sentiment_chart
-
-
-# ==============================================================================
-# Step 4: Simple Trend Model with statsmodels Formula API
-# ==============================================================================
-trend_model = smf.ols(formula="compound ~ step", data=df).fit()
-trend_model.summary()

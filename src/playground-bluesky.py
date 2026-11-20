@@ -84,7 +84,3 @@ engagement_chart = (
     )
 )
 engagement_chart
-
-# Simple linear model predicting likes from shares:
-engagement_model = smf.ols(formula="likes ~ shares", data=df).fit()
-engagement_model.summary()
